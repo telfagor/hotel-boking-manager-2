@@ -22,13 +22,13 @@ public class ReadOrderDto {
 
     @Override
     public String toString() {
-        return "id: \t" + orderId +
-                " check in: \t" + checkIn.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) +
-                " check out: \t" + checkOut.format(DateTimeFormatter.ofPattern("yyyy-MM-ss HH:mm:ss")) +
-                " first name: \t" + firstName +
-                " last name: \t" + lastName +
-                " email: \t" + email +
-                " gender: \t" + gender +
-                " status: \t" + status;
+        return "Order id: " + orderId +
+                "\tcheck in: " + checkIn.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) +
+                "\tcheck out: " + checkOut.format(DateTimeFormatter.ofPattern("yyyy-MM-ss HH:mm:ss")) +
+                "\tfirst name: " + firstName +
+                "\tlast name: " + lastName +
+                "\temail: " + email +
+                "\tgender: " + gender +
+                "\tstatus: " + status;
     }
 }
