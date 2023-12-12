@@ -9,4 +9,6 @@ public interface OrderService {
     CreateOrderDto create(CreateOrderDto createOrderDto);
 
     List<ReadOrderDto> findAll();
+
+    List<ReadOrderDto> findAllByUserId(Long id);
 }

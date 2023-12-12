@@ -110,18 +110,8 @@ public class OrderDaoImpl implements OrderDao {
 
     private static final String FIND_BY_ID = FIND_ALL_SQL + " WHERE o.id = ?";
     private static final String FIND_ORDERS_BY_APARTMENT_ID = FIND_ALL_SQL + " WHERE a.id = ?";
-            /*SELECT o.id,
-                   check_in,
-                   check_out,
-                   user_id,
-                   order_status_id,
-                   apartment_id,
-                   order_status_id,
-                   apartment_id
-            FROM "order" o JOIN apartment ap
-            ON o.apartment_id = ap.id
-            WHERE ap.id = ?*/
-                               
+
+    private static final String FIND_ORDERS_BY_USER_ID = FIND_ALL_SQL + " WHERE u.id = ?";
 
     private static final String DELETE_BY_ID = """
             DELETE FROM "order"
@@ -206,6 +196,24 @@ public class OrderDaoImpl implements OrderDao {
     public List<Order> findAll() {
         try (Connection connection = ConnectionManager.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_SQL)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            List<Order> orders = new ArrayList<>();
+            while (resultSet.next()) {
+                orders.add(buildOrder(resultSet));
+            }
+
+            return orders;
+        } catch (SQLException ex) {
+            throw new DaoException(ex.getMessage(), ex);
+        }
+    }
+
+    @Override
+    public List<Order> findAllByUserId(Long id) {
+        try (Connection connection = ConnectionManager.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(FIND_ORDERS_BY_USER_ID)) {
+            preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             List<Order> orders = new ArrayList<>();

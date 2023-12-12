@@ -15,5 +15,13 @@
 
 <br>
 <a href="${pageContext.request.contextPath}/apartment">To Apartments</a>
+
+<%--<form action="${pageContext.request.contextPath}/download">
+    <button type="button">Download</button>
+</form>--%>
+
+<a href="${pageContext.request.contextPath}/download">
+    <button type="button">Download</button>
+</a>
 </body>
 </html>

@@ -52,21 +52,21 @@ public class OrderServiceImpl implements OrderService {
         User user = userDtoMapper.mapToEntity(createOrderDto.readUserDto());
 
         //This code creates problems
-        /*apartmentDao.findById(Long.parseLong(createOrderDto.apartmentId()))
+        apartmentDao.findById(Long.parseLong(createOrderDto.apartmentId()))
                 .ifPresent(apartment -> {
                     apartment.setStatus(OCCUPIED);
                     order.setApartment(apartment);
                     apartmentDao.update(apartment);
-                });*/
+                });
 
         //Sometimes this code work
-        Optional<Apartment> maybeApartment = apartmentDao.findById(Long.parseLong(createOrderDto.apartmentId()));
+        /*Optional<Apartment> maybeApartment = apartmentDao.findById(Long.parseLong(createOrderDto.apartmentId()));
         if (maybeApartment.isPresent()) {
             Apartment apartment = maybeApartment.get();
             apartment.setStatus(OCCUPIED);
             order.setApartment(apartment);
             apartmentDao.update(apartment);
-        }
+        }*/
 
         order.setUser(user);
         order.setStatus(PENDING);
@@ -79,6 +79,13 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<ReadOrderDto> findAll() {
         return orderDao.findAll().stream()
+                .map(readMapper::mapFrom)
+                .toList();
+    }
+
+    @Override
+    public List<ReadOrderDto> findAllByUserId(Long id) {
+        return orderDao.findAllByUserId(id).stream()
                 .map(readMapper::mapFrom)
                 .toList();
     }
