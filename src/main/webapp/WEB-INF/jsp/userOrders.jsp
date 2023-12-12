@@ -12,5 +12,8 @@
             <li>${item}</li>
         </c:forEach>
     </ul>
+
+<br>
+<a href="${pageContext.request.contextPath}/apartment">To Apartments</a>
 </body>
 </html>

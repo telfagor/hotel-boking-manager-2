@@ -10,9 +10,6 @@
     <form action="${pageContext.request.contextPath}/logout" method="post" enctype="application/x-www-form-urlencoded">
         <button type="submit">Logout</button>
     </form>
-    <a href="${pageContext.request.contextPath}/userOrders">
-        <button type="button">Your orders</button>
-    </a>
 </c:if>
 </body>
 </html>

@@ -17,6 +17,7 @@
 </head>
 <body>
     <%@ include file="header.jsp"%>
+    <%@ include file="yourOrdersButton.jsp" %>
     <h2>Apartments</h2>
     <ul>
         <c:forEach var="apartment" items="${requestScope.apartments}">
