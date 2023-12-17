@@ -7,4 +7,6 @@ import java.util.List;
 public interface ApartmentDao extends BaseDao<Long, Apartment> {
 
     List<Apartment> findAll();
+
+    List<String> findAllImagesPaths();
 }

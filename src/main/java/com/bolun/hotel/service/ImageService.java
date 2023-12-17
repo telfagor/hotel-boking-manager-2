@@ -1,8 +1,8 @@
 package com.bolun.hotel.service;
 
-import com.bolun.hotel.connection.PropertiesUtil;
-import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.NoArgsConstructor;
+import com.bolun.hotel.connection.PropertiesUtil;
 
 import java.io.InputStream;
 import java.nio.file.Files;

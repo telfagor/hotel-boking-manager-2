@@ -63,6 +63,11 @@ public class ApartmentDaoImpl implements ApartmentDao {
 
     private static final String FIND_BY_ID = FIND_ALL_SQL + " WHERE ap.id = ?";
 
+    private static final String FIND_ALL_IMAGES_PATHS = """
+            SELECT photo
+            FROM apartment
+            """;
+
     private static final String DELETE_BY_ID = """
             DELETE FROM apartment
             WHERE id = ?
@@ -138,6 +143,23 @@ public class ApartmentDaoImpl implements ApartmentDao {
                 apartments.add(buildApartment(resultSet));
             }
             return apartments;
+        } catch (SQLException ex) {
+            throw new DaoException(ex.getMessage(), ex);
+        }
+    }
+
+    @Override
+    public List<String> findAllImagesPaths() {
+        try (Connection connection = ConnectionManager.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_IMAGES_PATHS)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            List<String> imagesPaths = new ArrayList<>();
+            while (resultSet.next()) {
+                imagesPaths.add(resultSet.getString("photo"));
+            }
+
+            return imagesPaths;
         } catch (SQLException ex) {
             throw new DaoException(ex.getMessage(), ex);
         }

@@ -11,7 +11,7 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor(access = PRIVATE)
 public class CreateUserDetailDtoMapper implements Mapper<CreateUserDetailDto, UserDetail> {
 
-    private static final String IMAGE_PARENT = "users/";
+    private static final String IMAGE_PARENT_FOLDER = "users/";
     private static final CreateUserDetailDtoMapper INSTANCE = new CreateUserDetailDtoMapper();
 
     @Override
@@ -23,7 +23,7 @@ public class CreateUserDetailDtoMapper implements Mapper<CreateUserDetailDto, Us
                 .contactNumber(object.contactNumber())
                 .birthdate(LocalDateFormatter.format(object.birthdate()))
                 .money(Integer.parseInt(object.money()))
-                .photo(photo.isBlank() ? photo.strip() : IMAGE_PARENT.concat(photo))
+                .photo(photo.isBlank() ? photo.strip() : IMAGE_PARENT_FOLDER.concat(photo))
                 .build();
     }
 

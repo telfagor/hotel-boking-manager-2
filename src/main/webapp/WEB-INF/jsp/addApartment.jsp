@@ -5,6 +5,8 @@
     <title>Title</title>
 </head>
 <body>
+<%@ include file="header.jsp" %>
+<h2>Add apartment</h2>
 <form action="${pageContext.request.contextPath}/addApartment" method="post" enctype="multipart/form-data">
     <label for="number_of_rooms">Number of rooms:</label>
     <input type="number" name="number_of_rooms" id="number_of_rooms">
@@ -34,5 +36,7 @@
     <br>
     <input type="submit">
 </form>
+
+
 </body>
 </html>

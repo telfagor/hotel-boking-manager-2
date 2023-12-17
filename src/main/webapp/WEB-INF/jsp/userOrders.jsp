@@ -12,9 +12,20 @@
 
 <h2>Your orders</h2>
 <ul>
-    <c:forEach var="item" items="${requestScope.orders}">
-        <li>${item}</li>
-    </c:forEach>
+    <c:choose>
+        <c:when test="${sessionScope.user.role eq 'ADMIN'}">
+            <c:forEach var="order" items="${requestScope.orders}">
+                <li>
+                    <a href="${pageContext.request.contextPath}/setOrderStatus?orderId=${order.orderId}">${order}</a>
+                </li>
+            </c:forEach>
+        </c:when>
+        <c:otherwise>
+            <c:forEach var="order" items="${requestScope.orders}">
+                <li>${order}</li>
+            </c:forEach>
+        </c:otherwise>
+    </c:choose>
 </ul>
 
 <br>

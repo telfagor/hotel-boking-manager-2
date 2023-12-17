@@ -18,6 +18,9 @@
 <body>
     <%@ include file="header.jsp"%>
     <%@ include file="yourOrdersButton.jsp" %>
+    <c:if test="${sessionScope.user.role eq 'ADMIN'}">
+        <%@ include file="addApartmentButton.jsp" %>
+    </c:if>
     <h2>Apartments</h2>
     <ul>
         <c:forEach var="apartment" items="${requestScope.apartments}">

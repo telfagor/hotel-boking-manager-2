@@ -4,24 +4,44 @@ import com.bolun.hotel.dao.ApartmentDao;
 import com.bolun.hotel.dao.OrderDao;
 import com.bolun.hotel.dao.impl.ApartmentDaoImpl;
 import com.bolun.hotel.dao.impl.OrderDaoImpl;
+import com.bolun.hotel.dto.CreateApartmentDto;
 import com.bolun.hotel.dto.ReadApartmentDto;
 import com.bolun.hotel.entity.Apartment;
 import com.bolun.hotel.entity.Order;
+import com.bolun.hotel.entity.enums.ApartmentStatus;
+import com.bolun.hotel.mapper.impl.CreateApartmentDtoMapper;
 import com.bolun.hotel.service.ApartmentService;
+import com.bolun.hotel.service.ImageService;
 import lombok.NoArgsConstructor;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.bolun.hotel.entity.enums.ApartmentStatus.AVAILABLE;
+import static com.bolun.hotel.entity.enums.ApartmentStatus.OCCUPIED;
 import static lombok.AccessLevel.PRIVATE;
 
 @NoArgsConstructor(access = PRIVATE)
 public class ApartmentServiceImpl implements ApartmentService {
 
     private static final ApartmentService INSTANCE = new ApartmentServiceImpl();
+    private static final String IMAGE_PARENT_PATH = "/images/";
     private final ApartmentDao apartmentDao = ApartmentDaoImpl.getInstance();
     private final OrderDao orderDao = OrderDaoImpl.getInstance();
+    private final ImageService imageService = ImageService.getInstance();
+
+    private final CreateApartmentDtoMapper createApartmentDtoMapper = CreateApartmentDtoMapper.getInstance();
+
+    @Override
+    public CreateApartmentDto save(CreateApartmentDto createApartmentDto) throws IOException {
+        //TODO: validation
+        Apartment apartment = createApartmentDtoMapper.mapFrom(createApartmentDto);
+
+        apartmentDao.save(apartment);
+        imageService.upload(apartment.getPhoto(), createApartmentDto.photo().getInputStream());
+        return createApartmentDto;
+    }
 
     @Override
     public List<ReadApartmentDto> findAll() {
@@ -40,9 +60,16 @@ public class ApartmentServiceImpl implements ApartmentService {
                 .toList();
     }
 
+    @Override
+    public List<String> findAllImagesPaths() {
+        return apartmentDao.findAllImagesPaths().stream()
+                .map(path -> IMAGE_PARENT_PATH.concat(path))
+                .toList();
+    }
+
     private void verifyTheApartmentStatus() {
         List<Apartment> apartments = apartmentDao.findAll().stream()
-                .filter(apartment -> "OCCUPIED".equals(apartment.getStatus().name()))
+                .filter(apartment -> OCCUPIED == apartment.getStatus())
                 .toList();
 
         for (Apartment apartment : apartments) {

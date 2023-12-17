@@ -61,6 +61,12 @@ public class OrderDaoImpl implements OrderDao {
             WHERE id = ?
             """;
 
+    private static final String UPDATE_ORDER_STATUS_BY_ID = """
+            UPDATE "order"
+            SET order_status_id = ?
+            WHERE id = ?
+            """;
+
     private static final String FIND_ALL_SQL = """
             SELECT o.id,
                    o.check_in,
@@ -110,9 +116,9 @@ public class OrderDaoImpl implements OrderDao {
 
     private static final String FIND_BY_ID = FIND_ALL_SQL + " WHERE o.id = ?";
     private static final String FIND_ORDERS_BY_APARTMENT_ID = FIND_ALL_SQL + " WHERE a.id = ?";
-
     private static final String FIND_ORDERS_BY_USER_ID = FIND_ALL_SQL + " WHERE u.id = ?";
 
+    private static final String ORDER_BY_ORDER_ID = " ORDER BY o.id";
     private static final String DELETE_BY_ID = """
             DELETE FROM "order"
             WHERE id = ?
@@ -195,7 +201,7 @@ public class OrderDaoImpl implements OrderDao {
 
     public List<Order> findAll() {
         try (Connection connection = ConnectionManager.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_SQL)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_SQL + ORDER_BY_ORDER_ID)) {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             List<Order> orders = new ArrayList<>();
@@ -212,7 +218,7 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public List<Order> findAllByUserId(Long id) {
         try (Connection connection = ConnectionManager.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(FIND_ORDERS_BY_USER_ID)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(FIND_ORDERS_BY_USER_ID + ORDER_BY_ORDER_ID)) {
             preparedStatement.setLong(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -222,6 +228,18 @@ public class OrderDaoImpl implements OrderDao {
             }
 
             return orders;
+        } catch (SQLException ex) {
+            throw new DaoException(ex.getMessage(), ex);
+        }
+    }
+
+    @Override
+    public Boolean updateStatusByOrderId(Long id, OrderStatus status) {
+        try (Connection connection = ConnectionManager.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_ORDER_STATUS_BY_ID)) {
+            preparedStatement.setInt(1, status.getValue());
+            preparedStatement.setLong(2, id);
+            return preparedStatement.executeUpdate() > 0;
         } catch (SQLException ex) {
             throw new DaoException(ex.getMessage(), ex);
         }

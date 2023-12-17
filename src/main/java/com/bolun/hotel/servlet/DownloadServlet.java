@@ -4,6 +4,7 @@ import com.bolun.hotel.dao.OrderDao;
 import com.bolun.hotel.dao.impl.OrderDaoImpl;
 import com.bolun.hotel.dto.ReadOrderDto;
 import com.bolun.hotel.dto.ReadUserDto;
+import com.bolun.hotel.helper.UrlPath;
 import com.bolun.hotel.service.OrderService;
 import com.bolun.hotel.service.impl.OrderServiceImpl;
 import jakarta.servlet.ServletException;
@@ -16,7 +17,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-@WebServlet("/download")
+import static com.bolun.hotel.helper.UrlPath.DOWNLOAD;
+
+@WebServlet(DOWNLOAD)
 public class DownloadServlet extends HttpServlet {
 
     private final OrderService orderService = OrderServiceImpl.getInstance();
