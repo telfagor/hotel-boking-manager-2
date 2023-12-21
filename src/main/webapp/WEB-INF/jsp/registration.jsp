@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
     <title>Registration</title>
@@ -12,38 +13,32 @@
 <body>
 
 <%@ include file="header.jsp" %>
-<h1>Registration</h1>
-<form action="${pageContext.request.contextPath}/registration" method="post" enctype="application/x-ww-urlencoded">
-    <label for="first_name">First Name:</label>
+<h1><fmt:message key="page.registration.title"/></h1>
+<form action="${pageContext.request.contextPath}/registration" method="post" enctype="application/x-www-form-urlencoded">
+    <label for="first_name"><fmt:message key="page.registration.first.name"/>:</label>
     <input type="text" name="first_name" id="first_name">
     <br>
-    <label for="last_name">Last Name:</label>
+    <label for="last_name"><fmt:message key="page.registration.last.name"/>:</label>
     <input type="text" name="last_name" id="last_name">
     <br>
-    <label for="email">Email:</label>
+    <label for="email"><fmt:message key="page.registration.email"/>:</label>
     <input type="email" name="email" id="email">
     <br>
-    <label for="password">Password:</label>
+    <label for="password"><fmt:message key="page.registration.password"/>:</label>
     <input type="password" name="password" id="password">
     <br>
-    <label for="role">Role:</label>
-    <select name="role" id="role">
-        <c:forEach var="role" items="${requestScope.roles}">
-            <option value="${role}" selected>${role}</option>
-        </c:forEach>
-    </select>
-    <br>
-    <label>Gender:
+    <label><fmt:message key="page.registration.gender"/>:
         <c:forEach var="gender" items="${requestScope.genders}">
             <input type="radio" name="gender" value="${gender}"> ${gender}
         </c:forEach>
     </label>
     <br>
-    <button type="submit">Submit</button>
+    <button type="submit"><fmt:message key="page.registration.submit.button"/></button>
+    <a href="${pageContext.request.contextPath}/login">
+        <button type="button"><fmt:message key="page.registration.login.button"/></button>
+    </a>
 </form>
-<a href="${pageContext.request.contextPath}/login">
-    <button type="button">Login</button>
-</a>
+
 <c:if test="${not empty requestScope.errors}">
     <c:forEach var="error" items="${requestScope.errors}">
         <span class="color-message">${error.message}</span>

@@ -29,6 +29,6 @@
 </ul>
 
 <br>
-<a href="${pageContext.request.contextPath}/apartment">To Apartments</a>
+<%@ include file="toApartmentButton.jsp" %>
 </body>
 </html>

@@ -16,7 +16,7 @@ public class UserDetailDaoImpl implements UserDetailDao {
     private static final UserDetailDao INSTANCE = new UserDetailDaoImpl();
 
     private static final String INSERT_SQL = """
-            INSERT INTO user_detail (id, contact_number, photo, birthdate, user_money)
+            INSERT INTO user_detail (id, contact_number, photo, birthdate, money)
             VALUES (?, ?, ?, ?, ?)
             """;
 
@@ -34,7 +34,7 @@ public class UserDetailDaoImpl implements UserDetailDao {
                    contact_number,
                    photo,
                    birthdate,
-                   user_money
+                   money
             FROM user_detail
             WHERE id = ?
             """;

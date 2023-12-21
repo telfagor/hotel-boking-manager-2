@@ -2,6 +2,7 @@ package com.bolun.hotel.validator;
 
 import com.bolun.hotel.dto.CreateOrderDto;
 import com.bolun.hotel.helper.LocalDateTimeFormatter;
+import com.bolun.hotel.helper.PriceCalculation;
 import lombok.NoArgsConstructor;
 
 import static lombok.AccessLevel.PRIVATE;
@@ -46,9 +47,9 @@ public class OrderValidatorImpl implements Validator<CreateOrderDto> {
             validationResult.add(Error.of("invalid.interval", "invalid date time interval"));
         }
 
-        /*if (!PriceCalculation.isEnoughMoney(createOrderDto)) {
+        if (!PriceCalculation.isEnoughMoney(createOrderDto)) {
             validationResult.add(Error.of("insufficient.money", "insufficient money"));
-        }*/
+        }
 
         return validationResult;
     }

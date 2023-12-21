@@ -11,13 +11,13 @@ public interface UserService {
 
     Long save(CreateUserDto createUserDto);
 
-    void saveUserDetail(Long id);
-
     Optional<ReadUserDto> findByEmailAndPassword(String email, String password);
 
     Boolean update(CreateUserDto createUserDto);
 
     Optional<User> findById(Long id);
+
+    Boolean isEmailAlreadyExist(String email);
 
     Boolean deleteById(Long id);
 }

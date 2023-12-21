@@ -83,7 +83,7 @@ public class ApartmentDaoImpl implements ApartmentDao {
             preparedStatement.setInt(2, apartment.getNumberOfSeats());
             preparedStatement.setBigDecimal(3, apartment.getPricePerHour());
             preparedStatement.setString(4, apartment.getPhoto());
-            preparedStatement.setInt(5, apartment.getStatus().getValue());
+            preparedStatement.setInt(5, ApartmentStatus.AVAILABLE.getValue());
             preparedStatement.setInt(6, apartment.getType().getValue());
             preparedStatement.executeUpdate();
 

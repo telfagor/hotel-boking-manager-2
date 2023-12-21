@@ -17,8 +17,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
-import static com.bolun.hotel.helper.UrlPath.LOGIN;
-import static com.bolun.hotel.helper.UrlPath.ORDER;
+import static com.bolun.hotel.helper.UrlPath.*;
 
 @WebServlet(ORDER)
 public class OrderServlet extends HttpServlet {
@@ -49,7 +48,7 @@ public class OrderServlet extends HttpServlet {
 
         try {
             orderService.create(createOrderDto);
-            resp.sendRedirect(LOGIN);
+            resp.sendRedirect(APARTMENT);
         } catch (InvalidDateException ex) {
             req.setAttribute("errors", ex.getErrors());
             doGet(req, resp);

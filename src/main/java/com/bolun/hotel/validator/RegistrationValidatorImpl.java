@@ -1,16 +1,18 @@
 package com.bolun.hotel.validator;
 
+import lombok.NoArgsConstructor;
 import com.bolun.hotel.dto.CreateUserDto;
 import com.bolun.hotel.entity.enums.Gender;
-import com.bolun.hotel.entity.enums.Role;
-import lombok.NoArgsConstructor;
+import com.bolun.hotel.service.UserService;
+import com.bolun.hotel.service.impl.UserServiceImpl;
 
 import static lombok.AccessLevel.PRIVATE;
 
 @NoArgsConstructor(access = PRIVATE)
-public class UserValidatorImpl implements Validator<CreateUserDto> {
+public class RegistrationValidatorImpl implements Validator<CreateUserDto> {
 
-    private static final UserValidatorImpl INSTANCE = new UserValidatorImpl();
+    private static final RegistrationValidatorImpl INSTANCE = new RegistrationValidatorImpl();
+    private final UserService userService = UserServiceImpl.getInstance();
 
     @Override
     public ValidationResult isValid(CreateUserDto createUserDto) {
@@ -28,6 +30,10 @@ public class UserValidatorImpl implements Validator<CreateUserDto> {
             validationResult.add(Error.of("invalid.email", "invalid email"));
         }
 
+        /*if (Boolean.TRUE.equals(userService.isEmailAlreadyExist(createUserDto.email()))) {
+            validationResult.add(Error.of("invalid.email", "email already exist!"));
+        }*/
+
         if (createUserDto.password() == null || createUserDto.password().isBlank()) {
             validationResult.add(Error.of("invalid.password", "invalid password"));
         }
@@ -36,14 +42,10 @@ public class UserValidatorImpl implements Validator<CreateUserDto> {
             validationResult.add(Error.of("invalid.gender", "invalid gender"));
         }
 
-        if (Role.find(createUserDto.role()).isEmpty()) {
-            validationResult.add(Error.of("invalid.gender", "invalid gender"));
-        }
-
         return validationResult;
     }
 
-    public static UserValidatorImpl getInstance() {
+    public static RegistrationValidatorImpl getInstance() {
         return INSTANCE;
     }
 }

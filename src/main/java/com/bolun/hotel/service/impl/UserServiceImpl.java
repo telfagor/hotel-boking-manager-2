@@ -7,11 +7,11 @@ import com.bolun.hotel.dto.ReadUserDto;
 import com.bolun.hotel.dto.CreateUserDto;
 import com.bolun.hotel.dao.impl.UserDaoImpl;
 import com.bolun.hotel.service.UserService;
-import com.bolun.hotel.validator.UserValidatorImpl;
 import com.bolun.hotel.validator.ValidationResult;
 import com.bolun.hotel.mapper.impl.ReadUserDtoMapper;
 import com.bolun.hotel.exception.UserNotValidException;
 import com.bolun.hotel.mapper.impl.CreateUserDtoMapper;
+import com.bolun.hotel.validator.RegistrationValidatorImpl;
 
 import java.util.Optional;
 
@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
     private final UserDao userDao = UserDaoImpl.getInstance();
     private final CreateUserDtoMapper createUserDtoMapper = CreateUserDtoMapper.getInstance();
     private final ReadUserDtoMapper readUserDtoMapper = ReadUserDtoMapper.getInstance();
-    private final UserValidatorImpl validator = UserValidatorImpl.getInstance();
+    private final RegistrationValidatorImpl validator = RegistrationValidatorImpl.getInstance();
 
     @Override
     public Long save(CreateUserDto createUserDto) {
@@ -38,25 +38,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void saveUserDetail(Long id) {
-        userDao.saveUserDetail(id);
-    }
-
-    @Override
     public Optional<ReadUserDto> findByEmailAndPassword(String email, String password) {
         return userDao.findByEmailAndPassword(email, password)
                 .map(readUserDtoMapper::mapFrom);
     }
 
     @Override
-    public Boolean update(CreateUserDto createUserDto) {
-        User user = createUserDtoMapper.mapFrom(createUserDto);
-        return userDao.update(user);
+    public Optional<User> findById(Long id) {
+        return userDao.findById(id);
     }
 
     @Override
-    public Optional<User> findById(Long id) {
-        return userDao.findById(id);
+    public Boolean isEmailAlreadyExist(String email) {
+        return userDao.isEmailAlreadySaved(email);
+    }
+
+    @Override
+    public Boolean update(CreateUserDto createUserDto) {
+        User user = createUserDtoMapper.mapFrom(createUserDto);
+        return userDao.update(user);
     }
 
     @Override

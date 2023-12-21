@@ -22,7 +22,6 @@ public class CreateUserDtoMapper implements Mapper<CreateUserDto, User> {
                 .lastName(object.lastName())
                 .email(object.email())
                 .password(object.password())
-                .role(Role.valueOf(object.role()))
                 .gender(Gender.valueOf(object.gender()))
                 .build();
     }

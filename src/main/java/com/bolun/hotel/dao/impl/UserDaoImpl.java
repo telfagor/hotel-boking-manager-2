@@ -108,7 +108,7 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setString(2, user.getLastName());
             preparedStatement.setString(3, user.getEmail());
             preparedStatement.setString(4, user.getPassword());
-            preparedStatement.setInt(5, user.getRole().getValue());
+            preparedStatement.setInt(5, Role.USER.getValue());
             preparedStatement.setInt(6, user.getGender().getValue());
             preparedStatement.executeUpdate();
 

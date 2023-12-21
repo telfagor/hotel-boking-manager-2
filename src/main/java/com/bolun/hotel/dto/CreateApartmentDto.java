@@ -6,6 +6,5 @@ public record CreateApartmentDto(String numberOfRooms,
                                  String numberOfSeats,
                                  String pricePerHour,
                                  Part photo,
-                                 String status,
                                  String type) {
 }

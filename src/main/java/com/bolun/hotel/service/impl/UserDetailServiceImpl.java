@@ -6,7 +6,7 @@ import com.bolun.hotel.dao.impl.UserDaoImpl;
 import com.bolun.hotel.dao.impl.UserDetailDaoImpl;
 import com.bolun.hotel.dto.CreateUserDetailDto;
 import com.bolun.hotel.entity.UserDetail;
-import com.bolun.hotel.exception.UserDetailNotValidationException;
+import com.bolun.hotel.exception.UserDetailValidationException;
 import com.bolun.hotel.mapper.impl.CreateUserDetailDtoMapper;
 import com.bolun.hotel.service.ImageService;
 import com.bolun.hotel.service.UserDetailService;
@@ -36,7 +36,7 @@ public class UserDetailServiceImpl implements UserDetailService {
         ValidationResult validationResult = userDetailValidatorImpl.isValid(createUserDetailDto);
 
         if (!validationResult.isValid()) {
-            throw new UserDetailNotValidationException(validationResult.getErrors());
+            throw new UserDetailValidationException(validationResult.getErrors());
         }
 
         UserDetail userDetail = createUserDetailDtoMapper.mapFrom(createUserDetailDto);

@@ -26,6 +26,7 @@ public class AuthorizationFilter implements Filter {
         PUBLIC_PATHS.add(REGISTRATION);
         PUBLIC_PATHS.add(LOGIN);
         PUBLIC_PATHS.add(APARTMENT);
+        PUBLIC_PATHS.add("/locale");
 
         PUBLIC_PATHS.addAll(apartmentService.findAllImagesPaths());
     }

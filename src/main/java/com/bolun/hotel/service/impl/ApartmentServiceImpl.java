@@ -9,9 +9,12 @@ import com.bolun.hotel.dto.ReadApartmentDto;
 import com.bolun.hotel.entity.Apartment;
 import com.bolun.hotel.entity.Order;
 import com.bolun.hotel.entity.enums.ApartmentStatus;
+import com.bolun.hotel.exception.ApartmentValidationException;
 import com.bolun.hotel.mapper.impl.CreateApartmentDtoMapper;
 import com.bolun.hotel.service.ApartmentService;
 import com.bolun.hotel.service.ImageService;
+import com.bolun.hotel.validator.ApartmentValidatorImpl;
+import com.bolun.hotel.validator.ValidationResult;
 import lombok.NoArgsConstructor;
 
 import java.io.IOException;
@@ -30,12 +33,17 @@ public class ApartmentServiceImpl implements ApartmentService {
     private final ApartmentDao apartmentDao = ApartmentDaoImpl.getInstance();
     private final OrderDao orderDao = OrderDaoImpl.getInstance();
     private final ImageService imageService = ImageService.getInstance();
-
     private final CreateApartmentDtoMapper createApartmentDtoMapper = CreateApartmentDtoMapper.getInstance();
 
+    private final ApartmentValidatorImpl apartmentValidator = ApartmentValidatorImpl.getInstance();
     @Override
     public CreateApartmentDto save(CreateApartmentDto createApartmentDto) throws IOException {
-        //TODO: validation
+        ValidationResult validationResult = apartmentValidator.isValid(createApartmentDto);
+
+        if (!validationResult.isValid()) {
+            throw new ApartmentValidationException(validationResult.getErrors());
+        }
+
         Apartment apartment = createApartmentDtoMapper.mapFrom(createApartmentDto);
 
         apartmentDao.save(apartment);
@@ -63,7 +71,7 @@ public class ApartmentServiceImpl implements ApartmentService {
     @Override
     public List<String> findAllImagesPaths() {
         return apartmentDao.findAllImagesPaths().stream()
-                .map(path -> IMAGE_PARENT_PATH.concat(path))
+                .map(IMAGE_PARENT_PATH::concat)
                 .toList();
     }
 

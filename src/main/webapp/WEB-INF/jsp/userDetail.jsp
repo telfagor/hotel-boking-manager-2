@@ -38,5 +38,6 @@
         </div>
     </c:forEach>
 </c:if>
+<%@ include file="toApartmentButton.jsp" %>
 </body>
 </html>

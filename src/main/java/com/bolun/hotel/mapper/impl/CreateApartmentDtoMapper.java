@@ -21,7 +21,6 @@ public class CreateApartmentDtoMapper implements Mapper<CreateApartmentDto, Apar
                 .numberOfSeats(Integer.parseInt(object.numberOfSeats()))
                 .pricePerHour(BigDecimal.valueOf(Double.parseDouble(object.pricePerHour())))
                 .photo(IMAGE_PARENT_FOLDER.concat(object.photo().getSubmittedFileName()))
-                .status(ApartmentStatus.valueOf(object.status()))
                 .type(ApartmentType.valueOf(object.type()))
                 .build();
     }

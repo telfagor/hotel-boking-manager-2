@@ -10,5 +10,7 @@
     <button value="approved" name="status" type="submit">APPROVED</button>
     <button value="rejected" name="status" type="submit">REJECTED</button>
 </form>
+
+<%@ include file="toApartmentButton.jsp" %>
 </body>
 </html>

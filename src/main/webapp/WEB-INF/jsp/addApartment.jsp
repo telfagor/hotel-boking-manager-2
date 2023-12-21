@@ -3,6 +3,12 @@
 <html>
 <head>
     <title>Title</title>
+
+    <style>
+        .error-message {
+            color: red;
+        }
+    </style>
 </head>
 <body>
 <%@ include file="header.jsp" %>
@@ -20,13 +26,6 @@
     <label for="photo">Photo:</label>
     <input type="file" name="photo" id="photo">
     <br>
-    <label for="status">Status:</label>
-    <select name="status" id="status">
-        <c:forEach var="status" items="${requestScope.statuses}">
-            <option value="${status}">${status}</option>
-        </c:forEach>
-    </select>
-    <br>
     <label for="type">Type:</label>
     <select name="type" id="type">
         <c:forEach var="type" items="${requestScope.types}">
@@ -34,9 +33,12 @@
         </c:forEach>
     </select>
     <br>
-    <input type="submit">
+    <input type="submit" value="Submit">
 </form>
+<c:forEach var="error" items="${requestScope.errors}">
+    <p class="error-message">${error.message}</p>
+</c:forEach>
 
-
+<%@ include file="toApartmentButton.jsp" %>
 </body>
 </html>
