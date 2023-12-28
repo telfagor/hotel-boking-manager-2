@@ -1,6 +1,5 @@
 package com.bolun.hotel.servlet;
 
-import com.bolun.hotel.helper.UrlPath;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

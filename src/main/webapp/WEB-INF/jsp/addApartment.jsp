@@ -14,26 +14,26 @@
 <%@ include file="header.jsp" %>
 <h2>Add apartment</h2>
 <form action="${pageContext.request.contextPath}/addApartment" method="post" enctype="multipart/form-data">
-    <label for="number_of_rooms">Number of rooms:</label>
+    <label for="number_of_rooms"><fmt:message key="page.apartment.rooms"/>:</label>
     <input type="number" name="number_of_rooms" id="number_of_rooms">
     <br>
-    <label for="number_of_seats">Number of seats:</label>
+    <label for="number_of_seats"><fmt:message key="page.apartment.seats"/>:</label>
     <input type="number" name="number_of_seats" id="number_of_seats">
     <br>
-    <label for="price_per_hour">Price per hour:</label>
+    <label for="price_per_hour"><fmt:message key="page.apartment.hour.price"/>:</label>
     <input type="number" name="price_per_hour" id="price_per_hour">
     <br>
-    <label for="photo">Photo:</label>
+    <label for="photo"><fmt:message key="page.add.apartment.photo"/>:</label>
     <input type="file" name="photo" id="photo">
     <br>
-    <label for="type">Type:</label>
+    <label for="type"><fmt:message key="page.apartment.type"/>:</label>
     <select name="type" id="type">
         <c:forEach var="type" items="${requestScope.types}">
             <option value="${type}">${type}</option>
         </c:forEach>
     </select>
     <br>
-    <input type="submit" value="Submit">
+    <button type="submit"><fmt:message key="page.registration.submit.button"/></button>
 </form>
 <c:forEach var="error" items="${requestScope.errors}">
     <p class="error-message">${error.message}</p>

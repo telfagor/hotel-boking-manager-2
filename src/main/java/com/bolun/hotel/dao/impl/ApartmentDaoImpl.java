@@ -1,11 +1,10 @@
 package com.bolun.hotel.dao.impl;
 
-import lombok.SneakyThrows;
+import com.bolun.hotel.helper.EntityBuilder;
 import lombok.NoArgsConstructor;
 import com.bolun.hotel.entity.Apartment;
 import com.bolun.hotel.dao.ApartmentDao;
 import com.bolun.hotel.exception.DaoException;
-import com.bolun.hotel.entity.enums.ApartmentType;
 import com.bolun.hotel.entity.enums.ApartmentStatus;
 import com.bolun.hotel.connection.ConnectionManager;
 
@@ -13,7 +12,6 @@ import java.sql.*;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Optional;
-import java.math.BigDecimal;
 
 import static lombok.AccessLevel.PRIVATE;
 
@@ -31,7 +29,7 @@ public class ApartmentDaoImpl implements ApartmentDao {
     private static final String TYPE = "apartment_type";
 
     private static final String INSERT_SQL = """
-            INSERT INTO 
+            INSERT INTO
             apartment (number_of_rooms, number_of_seats, price_per_hour, photo, apartment_status_id, apartment_type_id)
             VALUES (?, ?, ?, ?, ?, ?) 
             """;
@@ -123,7 +121,7 @@ public class ApartmentDaoImpl implements ApartmentDao {
 
             Apartment apartment = null;
             while (resultSet.next()) {
-                apartment = buildApartment(resultSet);
+                apartment = EntityBuilder.buildApartment(resultSet);
             }
 
             return Optional.ofNullable(apartment);
@@ -140,7 +138,7 @@ public class ApartmentDaoImpl implements ApartmentDao {
 
             List<Apartment> apartments = new ArrayList<>();
             while (resultSet.next()) {
-                apartments.add(buildApartment(resultSet));
+                apartments.add(EntityBuilder.buildApartment(resultSet));
             }
             return apartments;
         } catch (SQLException ex) {
@@ -156,7 +154,7 @@ public class ApartmentDaoImpl implements ApartmentDao {
 
             List<String> imagesPaths = new ArrayList<>();
             while (resultSet.next()) {
-                imagesPaths.add(resultSet.getString("photo"));
+                imagesPaths.add(resultSet.getString(PHOTO));
             }
 
             return imagesPaths;
@@ -174,19 +172,6 @@ public class ApartmentDaoImpl implements ApartmentDao {
         } catch (SQLException ex) {
             throw new DaoException(ex.getMessage(), ex);
         }
-    }
-
-    @SneakyThrows
-    private Apartment buildApartment(ResultSet resultSet) {
-        return Apartment.builder()
-                .id(resultSet.getObject(ID, Long.class))
-                .numberOfRooms(resultSet.getObject(NUMBER_OF_ROOMS, Integer.class))
-                .numberOfSeats(resultSet.getObject(NUMBER_OF_SEATS, Integer.class))
-                .pricePerHour(resultSet.getObject(PRICE_PER_HOUR, BigDecimal.class))
-                .photo(resultSet.getObject(PHOTO, String.class))
-                .status(ApartmentStatus.valueOf(resultSet.getObject(STATUS, String.class)))
-                .type(ApartmentType.valueOf(resultSet.getObject(TYPE, String.class)))
-                .build();
     }
 
     public static ApartmentDao getInstance() {

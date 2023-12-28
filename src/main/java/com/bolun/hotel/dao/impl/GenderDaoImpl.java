@@ -18,9 +18,9 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor(access = PRIVATE)
 public class GenderDaoImpl implements GenderDao {
 
+    private static final GenderDaoImpl INSTANCE = new GenderDaoImpl();
     private static final String GENDER_TYPE = "gender_type";
     private static final String ERROR_MESSAGE = "The error occurred in the findAll method!";
-    private static final GenderDaoImpl INSTANCE = new GenderDaoImpl();
 
 
     private static final String FIND_ALL_SQL = """

@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
     <title>Your Orders</title>
@@ -7,10 +8,10 @@
 <body>
 <%@ include file="header.jsp" %>
 <a href="${pageContext.request.contextPath}/download">
-    <button type="button">Download</button>
+    <button type="button"><fmt:message key="page.download.button"/></button>
 </a>
 
-<h2>Your orders</h2>
+<h2><fmt:message key="page.user.orders.title"/></h2>
 <ul>
     <c:choose>
         <c:when test="${sessionScope.user.role eq 'ADMIN'}">

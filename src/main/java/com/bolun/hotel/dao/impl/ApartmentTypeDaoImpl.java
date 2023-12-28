@@ -20,6 +20,7 @@ import static lombok.AccessLevel.PRIVATE;
 public class ApartmentTypeDaoImpl implements ApartmentTypeDao {
 
     private static final ApartmentTypeDao INSTANCE = new ApartmentTypeDaoImpl();
+    private static final String APARTMENT_TYPE = "ap_type";
 
     private static final String FIND_ALL_SQL = """
             SELECT ap_type
@@ -34,7 +35,7 @@ public class ApartmentTypeDaoImpl implements ApartmentTypeDao {
 
             List<ApartmentType> apartmentTypes = new ArrayList<>();
             while (resultSet.next()) {
-                apartmentTypes.add(ApartmentType.valueOf(resultSet.getString("ap_type")));
+                apartmentTypes.add(ApartmentType.valueOf(resultSet.getString(APARTMENT_TYPE)));
             }
 
             return apartmentTypes;

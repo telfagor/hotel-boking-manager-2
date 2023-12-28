@@ -1,5 +1,6 @@
 package com.bolun.hotel.dao.impl;
 
+import com.bolun.hotel.helper.EntityBuilder;
 import lombok.NoArgsConstructor;
 import com.bolun.hotel.dao.UserDetailDao;
 import com.bolun.hotel.entity.UserDetail;
@@ -14,6 +15,7 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor(access = PRIVATE)
 public class UserDetailDaoImpl implements UserDetailDao {
     private static final UserDetailDao INSTANCE = new UserDetailDaoImpl();
+    private static final String ID = "id";
 
     private static final String INSERT_SQL = """
             INSERT INTO user_detail (id, contact_number, photo, birthdate, money)
@@ -57,7 +59,7 @@ public class UserDetailDaoImpl implements UserDetailDao {
 
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
             resultSet.next();
-            userDetail.setId(resultSet.getLong("id"));
+            userDetail.setId(resultSet.getLong(ID));
 
             return userDetail;
         } catch (SQLException ex) {
@@ -84,24 +86,14 @@ public class UserDetailDaoImpl implements UserDetailDao {
             ResultSet resultSet = preparedStatement.executeQuery();
             UserDetail userDetail = null;
 
-            while (resultSet.next()) {
-                userDetail = buildUserDetail(resultSet);
+            if (resultSet.next()) {
+                userDetail = EntityBuilder.buildUserDetail(resultSet).orElse(null);
             }
 
             return Optional.ofNullable(userDetail);
         } catch (SQLException ex) {
             throw new DaoException(ex.getMessage(), ex);
         }
-    }
-
-    private UserDetail buildUserDetail(ResultSet resultSet) throws SQLException {
-        return UserDetail.builder()
-                .id(resultSet.getObject("id", Long.class))
-                .contactNumber(resultSet.getObject("contact_number", String.class))
-                .photo(resultSet.getObject("photo", String.class))
-                .birthdate(resultSet.getObject("birthdate", Date.class).toLocalDate())
-                .money(resultSet.getObject("user_money", Integer.class))
-                .build();
     }
 
     @Override

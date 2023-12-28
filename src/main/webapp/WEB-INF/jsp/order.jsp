@@ -13,10 +13,10 @@
 <body>
 <%@ include file="header.jsp" %>
 <%@ include file="yourOrdersButton.jsp" %>
-<h2>Create order!</h2>
+<h2><fmt:message key="page.create.order.title"/></h2>
 
 <form action="${pageContext.request.contextPath}/order" method="post" enctype="application/x-www-form-urlencoded">
-    <label for="apartment">Apartment:</label>
+    <label for="apartment"><fmt:message key="page.create.order.apartment"/>:</label>
     <select name="apartment" id="apartment">
         <c:forEach var="apartment" items="${requestScope.apartments}">
             <c:if test="${apartment.status ne 'OCCUPIED'}">
@@ -25,13 +25,13 @@
         </c:forEach>
     </select>
     <br>
-    <label for="check-in">Start to stay:</label>
+    <label for="check-in"><fmt:message key="page.create.order.start"/>:</label>
     <input type="datetime-local" name="check-in" value="${requestScope.current}" id="check-in">
     <br>
-    <label for="check-out">End to stay:</label>
+    <label for="check-out"><fmt:message key="page.create.order.end"/>:</label>
     <input type="datetime-local" name="check-out" id="check-out">
     <br>
-    <button type="submit">Create Order</button>
+    <button type="submit"><fmt:message key="page.create.order.button"/></button>
 </form>
 <c:if test="${not empty requestScope.errors}">
     <c:forEach var="error" items="${requestScope.errors}">

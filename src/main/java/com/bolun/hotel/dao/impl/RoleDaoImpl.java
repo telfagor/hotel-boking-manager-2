@@ -18,9 +18,9 @@ import static lombok.AccessLevel.PRIVATE;
 @NoArgsConstructor(access = PRIVATE)
 public class RoleDaoImpl implements RoleDao {
 
+    private static final RoleDaoImpl INSTANCE = new RoleDaoImpl();
     private static final String USER_ROLE = "user_role";
     private static final String ERROR_MESSAGE = "Error occurred in the findAll method!";
-    private static final RoleDaoImpl INSTANCE = new RoleDaoImpl();
 
     private static final String FIND_ALL = """
             SELECT user_role

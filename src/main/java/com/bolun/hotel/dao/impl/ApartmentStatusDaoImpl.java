@@ -4,7 +4,6 @@ import com.bolun.hotel.connection.ConnectionManager;
 import com.bolun.hotel.dao.ApartmentStatusDao;
 import com.bolun.hotel.entity.enums.ApartmentStatus;
 import com.bolun.hotel.exception.DaoException;
-import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.sql.Connection;
@@ -20,6 +19,7 @@ import static lombok.AccessLevel.PRIVATE;
 public class ApartmentStatusDaoImpl implements ApartmentStatusDao {
 
     private static final ApartmentStatusDao INSTANCE = new ApartmentStatusDaoImpl();
+    private static final String APARTMENT_STATUS = "ap_status";
 
     private static final String FIND_ALL_SQL = """
             SELECT ap_status
@@ -34,7 +34,7 @@ public class ApartmentStatusDaoImpl implements ApartmentStatusDao {
 
             List<ApartmentStatus> apartmentStatuses = new ArrayList<>();
             while (resultSet.next()) {
-                apartmentStatuses.add(ApartmentStatus.valueOf(resultSet.getString("ap_status")));
+                apartmentStatuses.add(ApartmentStatus.valueOf(resultSet.getString(APARTMENT_STATUS)));
             }
 
             return apartmentStatuses;

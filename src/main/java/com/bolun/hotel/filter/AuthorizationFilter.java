@@ -26,9 +26,8 @@ public class AuthorizationFilter implements Filter {
         PUBLIC_PATHS.add(REGISTRATION);
         PUBLIC_PATHS.add(LOGIN);
         PUBLIC_PATHS.add(APARTMENT);
-        PUBLIC_PATHS.add("/locale");
+        PUBLIC_PATHS.add(LOCALE);
 
-        PUBLIC_PATHS.addAll(apartmentService.findAllImagesPaths());
     }
 
     private final Set<String> LOGIN_PATHS = Set.of(
@@ -41,7 +40,7 @@ public class AuthorizationFilter implements Filter {
 
     private final Set<String> ADMIN_PATHS = Set.of(
             ADD_APARTMENT,
-            "/setOrderStatus"
+            SET_ORDER_STATUS
     );
 
     @Override
@@ -50,9 +49,11 @@ public class AuthorizationFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
         String uri = req.getRequestURI();
         ReadUserDto user = (ReadUserDto) req.getSession().getAttribute("user");
+        PUBLIC_PATHS.addAll(apartmentService.findAllImagesPaths());
 
         if (isPublicPath(uri) || (isLoginPath(uri) && isLoginIn(user))
                 || (isAdminPath(uri) && isLoginIn(user) && user.getRole() == ADMIN)) {
+
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
             resp.sendRedirect(LOGIN);

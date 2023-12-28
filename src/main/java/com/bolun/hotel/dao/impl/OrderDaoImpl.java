@@ -1,20 +1,16 @@
 package com.bolun.hotel.dao.impl;
 
-import com.bolun.hotel.entity.Apartment;
-import com.bolun.hotel.entity.User;
-import com.bolun.hotel.entity.UserDetail;
-import com.bolun.hotel.entity.enums.*;
-import lombok.SneakyThrows;
-import lombok.NoArgsConstructor;
-import com.bolun.hotel.entity.Order;
-import com.bolun.hotel.dao.OrderDao;
-import com.bolun.hotel.exception.DaoException;
 import com.bolun.hotel.connection.ConnectionManager;
+import com.bolun.hotel.dao.OrderDao;
+import com.bolun.hotel.entity.Order;
+import com.bolun.hotel.entity.enums.OrderStatus;
+import com.bolun.hotel.exception.DaoException;
+import com.bolun.hotel.helper.EntityBuilder;
+import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.sql.*;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static lombok.AccessLevel.PRIVATE;
@@ -23,28 +19,8 @@ import static lombok.AccessLevel.PRIVATE;
 public class OrderDaoImpl implements OrderDao {
 
     private static final OrderDao INSTANCE = new OrderDaoImpl();
-
     private static final String ID = "id";
-    private static final String CHECK_IN = "check_in";
-    private static final String CHECK_OUT = "check_out";
-    private static final String USER_ID = "user_id";
-    private static final String FIRST_NAME = "first_name";
-    private static final String LAST_NAME = "last_name";
-    private static final String EMAIL = "email";
-    private static final String USER_PASSWORD = "user_password";
-    private static final String USER_ROLE = "user_role";
-    private static final String GENDER = "gender_type";
-    private static final String USER_DETAIL_ID = "user_detail_id";
-    private static final String CONTACT_NUMBER = "contact_number";
-    private static final String USER_PHOTO = "photo";
-    private static final String BIRTHDATE = "birthdate";
-    private static final String MONEY = "money";
-    private static final String NUMBER_OF_ROOMS = "number_of_rooms";
-    private static final String NUMBER_OF_SEATS = "number_of_seats";
-    private static final String PRICE_PER_HOUR = "price_per_hour";
-    private static final String PHOTO = "photo";
-    private static final String STATUS = "ap_status";
-    private static final String TYPE = "ap_type";
+
 
     private static final String INSERT_SQL = """
             INSERT INTO "order" (check_in, check_out, user_id, order_status_id, apartment_id) 
@@ -74,7 +50,7 @@ public class OrderDaoImpl implements OrderDao {
                    o.user_id,
                    o.order_status_id,
                    o.apartment_id,
-                   os.status,           
+                   os.status AS order_status,          
                    u.id,
                    u.first_name,
                    u.last_name,
@@ -85,11 +61,11 @@ public class OrderDaoImpl implements OrderDao {
                    u.user_detail_id,
                    us.id,
                    us.contact_number,
-                   us.photo,
+                   us.photo AS user_photo,
                    us.birthdate,
                    us.money,
                    g.id,
-                   g.gender_type,
+                   g.gender_type AS gender,
                    r.id,
                    r.user_role,
                    a.id,
@@ -170,7 +146,7 @@ public class OrderDaoImpl implements OrderDao {
 
             Order order = null;
             while (resultSet.next()) {
-                order = buildOrder(resultSet);
+                order = EntityBuilder.buildOrder(resultSet);
             }
 
             return Optional.ofNullable(order);
@@ -190,7 +166,7 @@ public class OrderDaoImpl implements OrderDao {
 
             List<Order> orders = new ArrayList<>();
             while (resultSet.next()) {
-                orders.add(buildOrder(resultSet));
+                orders.add(EntityBuilder.buildOrder(resultSet));
             }
 
             return orders;
@@ -206,7 +182,7 @@ public class OrderDaoImpl implements OrderDao {
 
             List<Order> orders = new ArrayList<>();
             while (resultSet.next()) {
-                orders.add(buildOrder(resultSet));
+                orders.add(EntityBuilder.buildOrder(resultSet));
             }
 
             return orders;
@@ -224,7 +200,7 @@ public class OrderDaoImpl implements OrderDao {
 
             List<Order> orders = new ArrayList<>();
             while (resultSet.next()) {
-                orders.add(buildOrder(resultSet));
+                orders.add(EntityBuilder.buildOrder(resultSet));
             }
 
             return orders;
@@ -254,60 +230,6 @@ public class OrderDaoImpl implements OrderDao {
         } catch (SQLException ex) {
             throw new DaoException(ex.getMessage(), ex);
         }
-    }
-
-    @SneakyThrows
-    private Order buildOrder(ResultSet resultSet) {
-        return Order.builder()
-                .id(resultSet.getLong(ID))
-                .checkIn(resultSet.getTimestamp(CHECK_IN).toLocalDateTime())
-                .checkOut(resultSet.getTimestamp(CHECK_OUT).toLocalDateTime())
-                .user(buildUser(resultSet))
-                .apartment(buildApartment(resultSet))
-                .status(OrderStatus.valueOf(resultSet.getObject("status", String.class)))
-                .build();
-    }
-
-    @SneakyThrows
-    private User buildUser(ResultSet resultSet) {
-        return User.builder()
-                .id(resultSet.getObject(USER_ID, Long.class))
-                .firstName(resultSet.getObject(FIRST_NAME, String.class))
-                .lastName(resultSet.getObject(LAST_NAME, String.class))
-                .email(resultSet.getObject(EMAIL, String.class))
-                .password(resultSet.getObject(USER_PASSWORD, String.class))
-                .role(Role.valueOf(resultSet.getObject(USER_ROLE, String.class)))
-                .gender(Gender.valueOf(resultSet.getObject(GENDER, String.class)))
-                .userDetail(getUserDetail(resultSet).orElse(null))
-                .build();
-    }
-
-    @SneakyThrows
-    private Optional<UserDetail> getUserDetail(ResultSet resultSet) {
-        if (resultSet.getObject(USER_DETAIL_ID, Long.class) != null) {
-            return Optional.of(UserDetail.builder()
-                    .id(resultSet.getObject(USER_DETAIL_ID, Long.class))
-                    .contactNumber(resultSet.getObject(CONTACT_NUMBER, String.class))
-                    .photo(resultSet.getObject(USER_PHOTO, String.class))
-                    .birthdate(resultSet.getObject(BIRTHDATE, Date.class).toLocalDate())
-                    .money(resultSet.getObject(MONEY, Integer.class))
-                    .build());
-        }
-
-        return Optional.empty();
-    }
-
-    @SneakyThrows
-    private Apartment buildApartment(ResultSet resultSet) {
-        return Apartment.builder()
-                .id(resultSet.getObject(ID, Long.class))
-                .numberOfRooms(resultSet.getObject(NUMBER_OF_ROOMS, Integer.class))
-                .numberOfSeats(resultSet.getObject(NUMBER_OF_SEATS, Integer.class))
-                .pricePerHour(resultSet.getObject(PRICE_PER_HOUR, BigDecimal.class))
-                .photo(resultSet.getObject(PHOTO, String.class))
-                .status(ApartmentStatus.valueOf(resultSet.getObject(STATUS, String.class)))
-                .type(ApartmentType.valueOf(resultSet.getObject(TYPE, String.class)))
-                .build();
     }
 
     public static OrderDao getInstance() {

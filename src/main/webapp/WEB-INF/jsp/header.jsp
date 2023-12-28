@@ -7,11 +7,13 @@
 </head>
 <body>
 
-<h1>Welcome to our hotel!</h1><%--<fmt:message key="page.header.title"/>--%>
+<h1>Welcome to our hotel!</h1>
+
 <c:if test="${not empty sessionScope.user}">
-    <form action="${pageContext.request.contextPath}/logout" method="post" enctype="application/x-www-form-urlencoded">
+  <%--  <form action="${pageContext.request.contextPath}/logout" method="post" enctype="application/x-www-form-urlencoded">
         <button type="submit">Logout</button>
-    </form>
+    </form>--%>
+    <%@ include file="logoutButton.jsp" %>
 </c:if>
 
 <div>

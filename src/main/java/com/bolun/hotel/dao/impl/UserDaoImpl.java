@@ -1,13 +1,12 @@
 package com.bolun.hotel.dao.impl;
 
+import com.bolun.hotel.helper.EntityBuilder;
 import lombok.SneakyThrows;
 import lombok.NoArgsConstructor;
 import com.bolun.hotel.entity.User;
 import com.bolun.hotel.dto.UserFilter;
 import com.bolun.hotel.dao.UserDao;
-import com.bolun.hotel.entity.UserDetail;
 import com.bolun.hotel.entity.enums.Role;
-import com.bolun.hotel.entity.enums.Gender;
 import com.bolun.hotel.exception.DaoException;
 import com.bolun.hotel.connection.ConnectionManager;
 
@@ -23,7 +22,6 @@ import static java.util.stream.Collectors.joining;
 @NoArgsConstructor(access = PRIVATE)
 public class UserDaoImpl implements UserDao {
     private static final UserDao INSTANCE = new UserDaoImpl();
-
     private static final String ID = "id";
     private static final String USER_ID = "user_id";
     private static final String FIRST_NAME = "first_name";
@@ -162,7 +160,7 @@ public class UserDaoImpl implements UserDao {
             User user = null;
 
             if (resultSet.next()) {
-                user = buildUser(resultSet);
+                user = EntityBuilder.buildUser(resultSet);
             }
 
             return Optional.ofNullable(user);
@@ -193,7 +191,7 @@ public class UserDaoImpl implements UserDao {
             User user = null;
 
             if (resultSet.next()) {
-                user = buildUser(resultSet);
+                user = EntityBuilder.buildUser(resultSet);
             }
 
             return Optional.ofNullable(user);
@@ -256,7 +254,7 @@ public class UserDaoImpl implements UserDao {
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                users.add(buildUser(resultSet));
+                users.add(EntityBuilder.buildUser(resultSet));
             }
 
             return users;
@@ -297,7 +295,7 @@ public class UserDaoImpl implements UserDao {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                users.add(buildUser(resultSet));
+                users.add(EntityBuilder.buildUser(resultSet));
             }
         } catch (SQLException ex) {
             throw new DaoException(ex.getMessage(), ex);
@@ -338,7 +336,7 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
-    @SneakyThrows
+    /*@SneakyThrows
     private User buildUser(ResultSet resultSet) {
         return User.builder()
                 .id(resultSet.getObject(USER_ID, Long.class))
@@ -350,9 +348,9 @@ public class UserDaoImpl implements UserDao {
                 .gender(Gender.valueOf(resultSet.getObject(GENDER, String.class)))
                 .userDetail(getUserDetail(resultSet).orElse(null))
                 .build();
-    }
+    }*/
 
-    @SneakyThrows
+    /*@SneakyThrows
     private Optional<UserDetail> getUserDetail(ResultSet resultSet) {
         if (resultSet.getObject(USER_DETAIL_ID, Long.class) != null) {
             return Optional.of(UserDetail.builder()
@@ -365,7 +363,7 @@ public class UserDaoImpl implements UserDao {
         }
 
         return Optional.empty();
-    }
+    }*/
 
     public static UserDao getInstance() {
         return INSTANCE;
