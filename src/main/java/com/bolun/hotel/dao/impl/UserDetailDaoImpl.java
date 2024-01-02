@@ -8,6 +8,8 @@ import com.bolun.hotel.exception.DaoException;
 import com.bolun.hotel.connection.ConnectionManager;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static lombok.AccessLevel.PRIVATE;
@@ -16,27 +18,27 @@ import static lombok.AccessLevel.PRIVATE;
 public class UserDetailDaoImpl implements UserDetailDao {
     private static final UserDetailDao INSTANCE = new UserDetailDaoImpl();
     private static final String ID = "id";
+    private static final String PHOTO = "photo";
 
     private static final String INSERT_SQL = """
             INSERT INTO user_detail (id, contact_number, photo, birthdate, money)
             VALUES (?, ?, ?, ?, ?)
             """;
 
-    private static final String UPDATE_SQL = """
-            UPDATE user_detail
-            SET contact_number = ?,
-                photo = ?,
-                birthdate = ?
-            FROM user_detail
-            WHERE id = ?;
-            """;
+
 
     private static final String FIND_BY_ID_SQL = """
-            SELECT id,
+            SELECT id AS user_detail_id,
                    contact_number,
-                   photo,
+                   photo AS user_photo,
                    birthdate,
                    money
+            FROM user_detail
+            WHERE id = ?
+            """;
+
+    private static final String FIND_USER_IMAGE = """
+            SELECT photo
             FROM user_detail
             WHERE id = ?
             """;
@@ -67,11 +69,29 @@ public class UserDetailDaoImpl implements UserDetailDao {
         }
     }
 
+
+    private static final String UPDATE_SQL = """
+            UPDATE user_detail
+            SET contact_number = ?,
+                photo = ?,
+                birthdate = ?,
+                money = ?
+            WHERE id = ?;
+            """;
+
     @Override
     public Boolean update(UserDetail userDetail) {
+        String photo = userDetail.getPhoto().isEmpty()
+                ? findUserImageByUserId(userDetail.getId()).orElse(null)
+                : userDetail.getPhoto();
+
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
-            preparedStatement.setLong(1, userDetail.getId());
+            preparedStatement.setString(1, userDetail.getContactNumber());
+            preparedStatement.setObject(2, photo);
+            preparedStatement.setDate(3, Date.valueOf(userDetail.getBirthdate()));
+            preparedStatement.setInt(4, userDetail.getMoney());
+            preparedStatement.setLong(5, userDetail.getId());
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException ex) {
             throw new DaoException(ex.getMessage(), ex);
@@ -94,6 +114,22 @@ public class UserDetailDaoImpl implements UserDetailDao {
         } catch (SQLException ex) {
             throw new DaoException(ex.getMessage(), ex);
         }
+    }
+
+    @Override
+    public Optional<String> findUserImageByUserId(Long userId) {
+        try (Connection connection = ConnectionManager.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(FIND_USER_IMAGE)) {
+            preparedStatement.setLong(1, userId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                return Optional.of(resultSet.getObject(PHOTO, String.class));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return Optional.empty();
     }
 
     @Override

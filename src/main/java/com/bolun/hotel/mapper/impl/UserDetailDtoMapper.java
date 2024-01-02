@@ -1,6 +1,6 @@
 package com.bolun.hotel.mapper.impl;
 
-import com.bolun.hotel.dto.CreateUserDetailDto;
+import com.bolun.hotel.dto.UserDetailDto;
 import com.bolun.hotel.entity.UserDetail;
 import com.bolun.hotel.helper.LocalDateFormatter;
 import com.bolun.hotel.mapper.Mapper;
@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 import static lombok.AccessLevel.PRIVATE;
 
 @NoArgsConstructor(access = PRIVATE)
-public class CreateUserDetailDtoMapper implements Mapper<CreateUserDetailDto, UserDetail> {
+public class UserDetailDtoMapper implements Mapper<UserDetailDto, UserDetail> {
 
     private static final String IMAGE_PARENT_FOLDER = "users/";
-    private static final CreateUserDetailDtoMapper INSTANCE = new CreateUserDetailDtoMapper();
+    private static final UserDetailDtoMapper INSTANCE = new UserDetailDtoMapper();
 
     @Override
-    public UserDetail mapFrom(CreateUserDetailDto object) {
+    public UserDetail mapFrom(UserDetailDto object) {
         String photo = object.photo().getSubmittedFileName();
 
         return UserDetail.builder()
@@ -27,7 +27,7 @@ public class CreateUserDetailDtoMapper implements Mapper<CreateUserDetailDto, Us
                 .build();
     }
 
-    public static CreateUserDetailDtoMapper getInstance() {
+    public static UserDetailDtoMapper getInstance() {
         return INSTANCE;
     }
 }

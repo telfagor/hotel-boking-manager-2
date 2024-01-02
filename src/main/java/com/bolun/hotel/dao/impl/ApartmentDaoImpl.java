@@ -71,8 +71,6 @@ public class ApartmentDaoImpl implements ApartmentDao {
             WHERE id = ?
             """;
 
-
-
     @Override
     public Apartment save(Apartment apartment) {
         try (Connection connection = ConnectionManager.getConnection();

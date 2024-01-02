@@ -1,19 +1,19 @@
 package com.bolun.hotel.validator;
 
-import com.bolun.hotel.dto.CreateUserDetailDto;
+import com.bolun.hotel.dto.UserDetailDto;
 import com.bolun.hotel.helper.AgeCalculation;
 import com.bolun.hotel.helper.LocalDateFormatter;
 
 import java.time.Month;
 import java.time.LocalDate;
 
-public class UserDetailValidatorImpl implements Validator<CreateUserDetailDto> {
+public class UserDetailValidatorImpl implements Validator<UserDetailDto> {
 
     private static final UserDetailValidatorImpl INSTANCE = new UserDetailValidatorImpl();
     private static final LocalDate MIN_DATE = LocalDate.of(1950, Month.JANUARY, 1);
 
     @Override
-    public ValidationResult isValid(CreateUserDetailDto object) {
+    public ValidationResult isValid(UserDetailDto object) {
         ValidationResult validationResult = new ValidationResult();
 
         if (object.contactNumber() == null || object.contactNumber().isBlank()) {

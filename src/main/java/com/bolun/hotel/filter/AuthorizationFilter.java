@@ -1,5 +1,8 @@
+/*
 package com.bolun.hotel.filter;
 
+import com.bolun.hotel.service.UserDetailService;
+import com.bolun.hotel.service.impl.UserDetailServiceImpl;
 import jakarta.servlet.*;
 import com.bolun.hotel.dto.ReadUserDto;
 import com.bolun.hotel.service.ApartmentService;
@@ -19,6 +22,7 @@ import static com.bolun.hotel.entity.enums.Role.ADMIN;
 public class AuthorizationFilter implements Filter {
 
     private final ApartmentService apartmentService = ApartmentServiceImpl.getInstance();
+    private final UserDetailService userDetailService = UserDetailServiceImpl.getInstance();
 
     private final Set<String> PUBLIC_PATHS = new HashSet<>();
 
@@ -27,21 +31,27 @@ public class AuthorizationFilter implements Filter {
         PUBLIC_PATHS.add(LOGIN);
         PUBLIC_PATHS.add(APARTMENT);
         PUBLIC_PATHS.add(LOCALE);
+        PUBLIC_PATHS.addAll(apartmentService.findAllImagesPaths());
+    }
+
+    private final Set<String> LOGIN_PATHS = new HashSet<>();
+
+    {
+        LOGIN_PATHS.add(ORDER);
+        LOGIN_PATHS.add(USER_DETAIL);
+        LOGIN_PATHS.add(LOGOUT);
+        LOGIN_PATHS.add(DOWNLOAD);
+        LOGIN_PATHS.add(USER_ORDERS);
+        LOGIN_PATHS.add(PERSONAL_ACCOUNT);
 
     }
 
-    private final Set<String> LOGIN_PATHS = Set.of(
-            ORDER,
-            USER_DETAIL,
-            LOGOUT,
-            DOWNLOAD,
-            USER_ORDERS
-    );
+    private final Set<String> ADMIN_PATHS = new HashSet<>();
 
-    private final Set<String> ADMIN_PATHS = Set.of(
-            ADD_APARTMENT,
-            SET_ORDER_STATUS
-    );
+    {
+        ADMIN_PATHS.add(ADD_APARTMENT);
+    }
+
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException, ServletException, IOException {
@@ -49,11 +59,11 @@ public class AuthorizationFilter implements Filter {
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
         String uri = req.getRequestURI();
         ReadUserDto user = (ReadUserDto) req.getSession().getAttribute("user");
-        PUBLIC_PATHS.addAll(apartmentService.findAllImagesPaths());
 
         if (isPublicPath(uri) || (isLoginPath(uri) && isLoginIn(user))
                 || (isAdminPath(uri) && isLoginIn(user) && user.getRole() == ADMIN)) {
 
+            LOGIN_PATHS.add(userDetailService.findUserImageByUserId(user.getId()).orElse(null));
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
             resp.sendRedirect(LOGIN);
@@ -76,3 +86,4 @@ public class AuthorizationFilter implements Filter {
         return user != null;
     }
 }
+*/

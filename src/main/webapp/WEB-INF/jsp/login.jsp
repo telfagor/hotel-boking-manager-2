@@ -17,10 +17,10 @@
 
 <form action="${pageContext.request.contextPath}/login" method="post" enctype="application/x-www-form-urlencoded">
     <label for="email"><fmt:message key="page.login.email"/>:</label>
-    <input type="email" name="email" id="email" value="${param.email}" required>
+    <input type="email" name="email" id="email" value="${param.email}">
     <br>
     <label for="password"><fmt:message key="page.login.password"/>:</label>
-    <input type="password" name="password" id="password" required>
+    <input type="password" name="password" id="password">
     <br>
     <button type="submit"><fmt:message key="page.login.submit.button"/></button>
 </form>
