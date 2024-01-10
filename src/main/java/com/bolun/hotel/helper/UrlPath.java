@@ -17,6 +17,7 @@ public class UrlPath {
     public static final String LOGOUT = "/logout";
     public static final String PERSONAL_ACCOUNT = "/personalAccount";
     public static final String SET_ORDER_STATUS = "/setOrderStatus";
+    public static final String ALL_USERS = "/allUsers";
     public static final String ALL = "/*";
 
 }

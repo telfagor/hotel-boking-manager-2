@@ -13,6 +13,7 @@
 <body>
 
 <%@ include file="header.jsp" %>
+
 <h1><fmt:message key="page.registration.title"/></h1>
 <form action="${pageContext.request.contextPath}/registration" method="post" enctype="application/x-www-form-urlencoded">
     <label for="first_name"><fmt:message key="page.registration.first.name"/>:</label>

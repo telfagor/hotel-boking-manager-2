@@ -37,11 +37,13 @@ public class UserDetailDaoImpl implements UserDetailDao {
             WHERE id = ?
             """;
 
-    private static final String FIND_USER_IMAGE = """
+    private static final String FIND_USERS_IMAGES = """
             SELECT photo
             FROM user_detail
-            WHERE id = ?
             """;
+
+    private static final String FIND_USER_IMAGE_BY_ID = FIND_USERS_IMAGES + " WHERE id = ?";
+
 
     private static final String DELETE_BY_ID_SQL = """
             DELETE FROM user_detail
@@ -119,7 +121,7 @@ public class UserDetailDaoImpl implements UserDetailDao {
     @Override
     public Optional<String> findUserImageByUserId(Long userId) {
         try (Connection connection = ConnectionManager.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(FIND_USER_IMAGE)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(FIND_USER_IMAGE_BY_ID)) {
             preparedStatement.setLong(1, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -130,6 +132,23 @@ public class UserDetailDaoImpl implements UserDetailDao {
             ex.printStackTrace();
         }
         return Optional.empty();
+    }
+
+    @Override
+    public List<String> findAllUsersPhotos() {
+        try (Connection connection = ConnectionManager.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(FIND_USERS_IMAGES)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            List<String> photos = new ArrayList<>();
+            while (resultSet.next()) {
+                photos.add(resultSet.getObject("photo", String.class));
+            }
+
+            return photos;
+        } catch (SQLException ex) {
+            throw new DaoException("message", ex);
+        }
     }
 
     @Override

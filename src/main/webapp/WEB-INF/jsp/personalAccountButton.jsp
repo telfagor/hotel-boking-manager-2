@@ -3,14 +3,14 @@
 <head>
     <title>User Detail Button</title>
     <style>
-        a {
-            display: inline-block;
-            margin-bottom: 30px;
+        .personal-account {
+            display: block;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
-    <a href="${requestScope.request.contextPath}/personalAccount">
+    <a class="personal-account" href="${requestScope.request.contextPath}/personalAccount">
         <button type="submit">Your Details</button>
     </a>
 <br>

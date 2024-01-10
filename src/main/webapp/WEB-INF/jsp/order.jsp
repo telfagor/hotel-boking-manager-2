@@ -13,8 +13,12 @@
 <body>
 <%@ include file="header.jsp" %>
 <%@ include file="yourOrdersButton.jsp" %>
-<h2><fmt:message key="page.create.order.title"/></h2>
 
+<c:if test="${sessionScope.user.role eq 'ADMIN'}">
+    <%@ include file="addApartmentButton.jsp" %>
+</c:if>
+
+<h2><fmt:message key="page.create.order.title"/></h2>
 <form action="${pageContext.request.contextPath}/order" method="post" enctype="application/x-www-form-urlencoded">
     <label for="apartment"><fmt:message key="page.create.order.apartment"/>:</label>
     <select name="apartment" id="apartment">

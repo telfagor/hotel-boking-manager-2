@@ -16,6 +16,7 @@ import com.bolun.hotel.validator.ValidationResult;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 
+import java.util.List;
 import java.util.Optional;
 
 import static lombok.AccessLevel.PRIVATE;
@@ -74,6 +75,11 @@ public class UserDetailServiceImpl implements UserDetailService {
     public Optional<UserDetail> findById(Long id) {
 
         return userDetailDao.findById(id);
+    }
+
+    @Override
+    public List<String> findAllUsersImages() {
+        return userDetailDao.findAllUsersPhotos();
     }
 
     @Override

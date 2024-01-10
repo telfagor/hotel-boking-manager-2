@@ -64,6 +64,8 @@ public class EntityBuilder {
                 .build();
     }
 
+
+
     @SneakyThrows
     public User buildUser(ResultSet resultSet) {
         return User.builder()
@@ -93,3 +95,4 @@ public class EntityBuilder {
         return Optional.empty();
     }
 }
+

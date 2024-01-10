@@ -15,21 +15,26 @@
 <body>
 
 <%@include file="header.jsp" %>
+<%--<%@ include file="personalAccountButton.jsp" %>--%>
 <h2><fmt:message key="page.user.detail.title"/></h2>
+
+<c:if test="${sessionScope.user.role eq 'ADMIN'}">
+    <%@ include file="addApartmentButton.jsp" %>
+</c:if>
 
 <form action="${pageContext.request.contextPath}/userDetail" method="post" enctype="multipart/form-data">
     <label for="tel"><fmt:message key="page.user.detail.telephone"/>:</label>
     <input type="tel" name="telephone" id="tel" required>
-    <br>
+    <br><br>
     <label for="photo"><fmt:message key="page.user.detail.photo"/></label>
     <input type="file" name="photo" id="photo">
-    <br>
+    <br><br>
     <label for="birthdate"><fmt:message key="page.user.detail.birthdate"/>:</label>
     <input type="date" name="birthdate" id="birthdate" required>
-    <br>
+    <br><br>
     <label for="amount"><fmt:message key="page.user.detail.amount"/>:</label>
     <input type="number" name="amount" min="0" value="0" id="amount">
-    <br>
+    <br><br>
     <button type="submit"><fmt:message key="page.user.add.details"/></button>
 </form>
 <c:if test="${not empty requestScope.errors}">

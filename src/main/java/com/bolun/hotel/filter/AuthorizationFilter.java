@@ -3,10 +3,10 @@ package com.bolun.hotel.filter;
 
 import com.bolun.hotel.service.UserDetailService;
 import com.bolun.hotel.service.impl.UserDetailServiceImpl;
-import jakarta.servlet.*;
 import com.bolun.hotel.dto.ReadUserDto;
 import com.bolun.hotel.service.ApartmentService;
 import com.bolun.hotel.service.impl.ApartmentServiceImpl;
+import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -43,13 +43,15 @@ public class AuthorizationFilter implements Filter {
         LOGIN_PATHS.add(DOWNLOAD);
         LOGIN_PATHS.add(USER_ORDERS);
         LOGIN_PATHS.add(PERSONAL_ACCOUNT);
-
+        LOGIN_PATHS.addAll(userDetailService.findAllUsersImages());
     }
 
     private final Set<String> ADMIN_PATHS = new HashSet<>();
 
     {
         ADMIN_PATHS.add(ADD_APARTMENT);
+        ADMIN_PATHS.add("/allUsers");
+        ADMIN_PATHS.add("/setOrderStatus");
     }
 
 
@@ -63,7 +65,9 @@ public class AuthorizationFilter implements Filter {
         if (isPublicPath(uri) || (isLoginPath(uri) && isLoginIn(user))
                 || (isAdminPath(uri) && isLoginIn(user) && user.getRole() == ADMIN)) {
 
-            LOGIN_PATHS.add(userDetailService.findUserImageByUserId(user.getId()).orElse(null));
+            if (user != null && user.getUserDetail() != null) {
+                LOGIN_PATHS.add(userDetailService.findUserImageByUserId(user.getId()).orElse(null));
+            }
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
             resp.sendRedirect(LOGIN);

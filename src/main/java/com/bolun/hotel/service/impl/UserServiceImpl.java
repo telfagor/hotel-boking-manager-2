@@ -1,5 +1,6 @@
 package com.bolun.hotel.service.impl;
 
+import com.bolun.hotel.dto.UserFilter;
 import lombok.NoArgsConstructor;
 import com.bolun.hotel.entity.User;
 import com.bolun.hotel.dao.UserDao;
@@ -13,6 +14,7 @@ import com.bolun.hotel.exception.UserNotValidException;
 import com.bolun.hotel.mapper.impl.CreateUserDtoMapper;
 import com.bolun.hotel.validator.RegistrationValidatorImpl;
 
+import java.util.List;
 import java.util.Optional;
 
 import static lombok.AccessLevel.PRIVATE;
@@ -57,6 +59,19 @@ public class UserServiceImpl implements UserService {
     public Boolean update(CreateUserDto createUserDto) {
         User user = createUserDtoMapper.mapFrom(createUserDto);
         return userDao.update(user);
+    }
+
+    public List<ReadUserDto> findAll() {
+        return userDao.findAll().stream()
+                .map(readUserDtoMapper::mapFrom)
+                .toList();
+    }
+
+    @Override
+    public List<ReadUserDto> findAll(UserFilter userFilter) throws IllegalAccessException {
+        return userDao.findAll(userFilter).stream()
+                .map(readUserDtoMapper::mapFrom)
+                .toList();
     }
 
     @Override

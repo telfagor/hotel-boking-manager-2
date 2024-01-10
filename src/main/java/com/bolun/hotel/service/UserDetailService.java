@@ -3,6 +3,7 @@ package com.bolun.hotel.service;
 import com.bolun.hotel.dto.UserDetailDto;
 import com.bolun.hotel.entity.UserDetail;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserDetailService {
@@ -14,4 +15,6 @@ public interface UserDetailService {
     Optional<UserDetail> findById(Long id);
 
     Optional<String> findUserImageByUserId(Long userId);
+
+    List<String> findAllUsersImages();
 }

@@ -5,7 +5,7 @@ import java.util.Optional;
 
 public enum Role {
 
-    USER(1),
+    CLIENT(1),
     ADMIN(2);
 
     private final Integer value;

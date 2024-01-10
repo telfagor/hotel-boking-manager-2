@@ -23,18 +23,6 @@ import static java.util.stream.Collectors.joining;
 public class UserDaoImpl implements UserDao {
     private static final UserDao INSTANCE = new UserDaoImpl();
     private static final String ID = "id";
-    private static final String USER_ID = "user_id";
-    private static final String FIRST_NAME = "first_name";
-    private static final String LAST_NAME = "last_name";
-    private static final String EMAIL = "email";
-    private static final String USER_PASSWORD = "user_password";
-    private static final String USER_ROLE = "user_role";
-    private static final String GENDER = "gender";
-    private static final String USER_DETAIL_ID = "user_detail_id";
-    private static final String CONTACT_NUMBER = "contact_number";
-    private static final String USER_PHOTO = "user_photo";
-    private static final String BIRTHDATE = "birthdate";
-    private static final String MONEY = "money";
 
     private static final String INSERT_SQL = """
             INSERT INTO "user"
@@ -106,7 +94,7 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setString(2, user.getLastName());
             preparedStatement.setString(3, user.getEmail());
             preparedStatement.setString(4, user.getPassword());
-            preparedStatement.setInt(5, Role.USER.getValue());
+            preparedStatement.setInt(5, user.getRole() != null ? user.getRole().getValue() : Role.CLIENT.getValue());
             preparedStatement.setInt(6, user.getGender().getValue());
             preparedStatement.executeUpdate();
 
@@ -201,50 +189,51 @@ public class UserDaoImpl implements UserDao {
     }
 
 
-    @Override
+    /*@Override
     public List<User> findAll(UserFilter filter) throws IllegalAccessException {
         List<User> users = new ArrayList<>();
         List<Object> parameters = new ArrayList<>();
         List<String> whereSQL = new ArrayList<>();
-        boolean isFilterNotEmpty = false;
+        boolean isFilterEmpty = true;
 
-        if (filter.firstName() != null) {
-            parameters.add('%' + filter.firstName() + '%');
+        if (filter.getFirstName() != null) {
+            parameters.add('%' + filter.getFirstName() + '%');
             whereSQL.add("first_name LIKE ?");
-            isFilterNotEmpty = true;
+            isFilterEmpty = false;
         }
 
-        if (filter.lastName() != null) {
-            parameters.add('%' + filter.lastName() + '%');
+        if (filter.getLastName() != null) {
+            parameters.add('%' + filter.getLastName() + '%');
             whereSQL.add("last_name LIKE ?");
-            isFilterNotEmpty = true;
+            isFilterEmpty = false;
         }
 
-        if (filter.email() != null) {
-            parameters.add('%' + filter.email() + '%');
+        if (filter.getEmail() != null) {
+            parameters.add('%' + filter.getEmail() + '%');
             whereSQL.add("email LIKE ?");
-            isFilterNotEmpty = true;
+            isFilterEmpty = false;
         }
 
-        if (filter.gender() != null) {
-            parameters.add('%' + filter.gender().name() + '%');
+        if (filter.getGender() != null) {
+            parameters.add('%' + filter.getGender().name() + '%');
             whereSQL.add("gender LIKE ?");
-            isFilterNotEmpty = true;
+            isFilterEmpty = false;
         }
 
-        if (filter.role() != null) {
-            parameters.add('%' + filter.role().name() + '%');
+        if (filter.getRole() != null) {
+            parameters.add('%' + filter.getRole().name() + '%');
             whereSQL.add("role LIKE ?");
-            isFilterNotEmpty = true;
+            isFilterEmpty = false;
         }
 
-        parameters.add(filter.limit());
-        parameters.add(filter.offset());
+        parameters.add(filter.getPageSize());
+        parameters.add(filter.getOffset());
 
-        String where = whereSQL.stream()
-                .collect(joining(" AND ", " WHERE ", " LIMIT ? OFFSET ?"));
+        String where = !isFilterEmpty
+                ? whereSQL.stream().collect(joining(" AND ", " WHERE ", " ORDER BY u.id LIMIT ? OFFSET ?"))
+                : " ORDER BY u.id LIMIT ? OFFSET ?";
 
-        String sql = FIND_ALL_SQL + (isFilterNotEmpty ? where : "");
+        String sql = FIND_ALL_SQL + (isFilterEmpty ? where : "") + " ";
 
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -261,9 +250,10 @@ public class UserDaoImpl implements UserDao {
         } catch (SQLException ex) {
             throw new DaoException(ex.getMessage(), ex);
         }
-    }
+    }*/
 
-    public List<User> findAll2(UserFilter filter) {
+    @Override
+    public List<User> findAll(UserFilter filter) {
         List<User> users = new ArrayList<>();
         List<Object> parameters = new ArrayList<>();
         List<String> whereSQL = new ArrayList<>();
@@ -272,7 +262,8 @@ public class UserDaoImpl implements UserDao {
         try {
             Class<UserFilter> clazz = UserFilter.class;
             for (Field field : clazz.getDeclaredFields()) {
-                if (field.get(filter) != null) {
+                field.setAccessible(true);
+                if (field.get(filter) != null && !isColumnNameProperly(field.getName())) {
                     parameters.add('%' + field.getName() + '%');
                     whereSQL.add(getColumnName(field.getName()) + " LIKE ?");
                     isFilterNotEmpty = true;
@@ -282,10 +273,14 @@ public class UserDaoImpl implements UserDao {
             throw new DaoException("An error occur when are working with reflection!", ex);
         }
 
-        String where = whereSQL.stream()
-                .collect(joining(" AND ", " WHERE ", " LIMIT ? OFFSET ?"));
+        parameters.add(filter.getPageSize());
+        parameters.add(filter.getOffset());
 
-        String sql = FIND_ALL_SQL + (isFilterNotEmpty ? where : "");
+        String where = isFilterNotEmpty
+                ? whereSQL.stream().collect(joining(" AND ", " WHERE ", " ORDER BY u.id LIMIT ? OFFSET ?"))
+                : " ORDER BY u.id LIMIT ? OFFSET ?";
+
+        String sql = FIND_ALL_SQL + (!isFilterNotEmpty ? where : "");
 
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -305,23 +300,38 @@ public class UserDaoImpl implements UserDao {
 
     private String getColumnName(String name) {
         StringBuilder stringBuilder = new StringBuilder();
-        int start = 0;
-        int upperLetterPos = 0;
-        int nextAfterUpperLetterPos;
 
-        for (int i = 0; i < name.length(); i += nextAfterUpperLetterPos) {
+        for (int i = 0; i < name.length(); i++) {
             char letter = name.charAt(i);
-            if (Character.isUpperCase(letter)) {
-                upperLetterPos = i;
-                String untilUpperCase = name.substring(start, upperLetterPos);
-                stringBuilder.append(untilUpperCase).append("_");
-                stringBuilder.append(Character.toLowerCase(letter));
+
+            if (Character.isUpperCase(letter) && i > 0) {
+                stringBuilder.append('_');
             }
-            start = upperLetterPos + 1;
-            nextAfterUpperLetterPos = upperLetterPos + 1;
+            stringBuilder.append(Character.toLowerCase(letter));
         }
 
         return stringBuilder.toString();
+    }
+
+    private boolean isColumnNameProperly(String name) {
+        return name.equals("pageSize") || name.equals("pageNumber");
+    }
+
+    @Override
+    public List<User> findAll() {
+        try (Connection connection = ConnectionManager.getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_SQL)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            List<User> users = new ArrayList<>();
+            while (resultSet.next()) {
+                users.add(EntityBuilder.buildUser(resultSet));
+            }
+
+            return users;
+        } catch (SQLException ex) {
+            throw new DaoException("An error occur when trying to find all users!", ex);
+        }
     }
 
     @SneakyThrows
@@ -335,35 +345,6 @@ public class UserDaoImpl implements UserDao {
             throw new DaoException(ex.getMessage(), ex);
         }
     }
-
-    /*@SneakyThrows
-    private User buildUser(ResultSet resultSet) {
-        return User.builder()
-                .id(resultSet.getObject(USER_ID, Long.class))
-                .firstName(resultSet.getObject(FIRST_NAME, String.class))
-                .lastName(resultSet.getObject(LAST_NAME, String.class))
-                .email(resultSet.getObject(EMAIL, String.class))
-                .password(resultSet.getObject(USER_PASSWORD, String.class))
-                .role(Role.valueOf(resultSet.getObject(USER_ROLE, String.class)))
-                .gender(Gender.valueOf(resultSet.getObject(GENDER, String.class)))
-                .userDetail(getUserDetail(resultSet).orElse(null))
-                .build();
-    }*/
-
-    /*@SneakyThrows
-    private Optional<UserDetail> getUserDetail(ResultSet resultSet) {
-        if (resultSet.getObject(USER_DETAIL_ID, Long.class) != null) {
-            return Optional.of(UserDetail.builder()
-                    .id(resultSet.getObject(USER_DETAIL_ID, Long.class))
-                    .contactNumber(resultSet.getObject(CONTACT_NUMBER, String.class))
-                    .photo(resultSet.getObject(USER_PHOTO, String.class))
-                    .birthdate(resultSet.getObject(BIRTHDATE, Date.class).toLocalDate())
-                    .money(resultSet.getObject(MONEY, Integer.class))
-                    .build());
-        }
-
-        return Optional.empty();
-    }*/
 
     public static UserDao getInstance() {
         return INSTANCE;

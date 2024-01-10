@@ -1,6 +1,9 @@
 package com.bolun.hotel.servlet;
 
+import com.bolun.hotel.dto.ReadOrderDto;
+import com.bolun.hotel.dto.ReadUserDto;
 import com.bolun.hotel.entity.enums.OrderStatus;
+import com.bolun.hotel.entity.enums.Role;
 import com.bolun.hotel.helper.JspHelper;
 import com.bolun.hotel.service.OrderService;
 import com.bolun.hotel.service.impl.OrderServiceImpl;
@@ -12,8 +15,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-import static com.bolun.hotel.helper.UrlPath.SET_ORDER_STATUS;
-import static com.bolun.hotel.helper.UrlPath.USER_ORDERS;
+import static com.bolun.hotel.entity.enums.Role.ADMIN;
+import static com.bolun.hotel.helper.UrlPath.*;
 
 @WebServlet(SET_ORDER_STATUS)
 public class SetOrderStatusServlet extends HttpServlet {
@@ -30,8 +33,15 @@ public class SetOrderStatusServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
        String status = req.getParameter("status");
        String orderId = req.getParameter("orderId");
+       String userId = req.getParameter("userId");
 
        orderService.updateStatusByOrderId(Long.parseLong(orderId), OrderStatus.valueOf(status.toUpperCase()));
-       resp.sendRedirect(USER_ORDERS);
+       ReadUserDto readUserDto = (ReadUserDto) req.getSession().getAttribute("user");
+
+       if (readUserDto.getRole() == ADMIN) {
+           resp.sendRedirect(USER_ORDERS.concat("?userId=" + userId));
+       } else {
+           resp.sendRedirect(APARTMENT);
+       }
     }
 }

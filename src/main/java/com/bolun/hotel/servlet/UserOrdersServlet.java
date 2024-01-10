@@ -12,9 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-import static com.bolun.hotel.entity.enums.Role.USER;
 import static com.bolun.hotel.helper.UrlPath.USER_ORDERS;
-
 @WebServlet(USER_ORDERS)
 public class UserOrdersServlet extends HttpServlet {
 
@@ -22,14 +20,13 @@ public class UserOrdersServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        ReadUserDto readUserDto = (ReadUserDto) req.getSession().getAttribute("user");
+        String userId = req.getParameter("userId");
+        Long id = userId != null
+                ? Long.parseLong(userId)
+                : ((ReadUserDto) req.getSession().getAttribute("user")).getId();
 
-        if (readUserDto.getRole() == USER) {
-            req.setAttribute("orders", orderService.findAllByUserId(readUserDto.getId()));
-        } else {
-            req.setAttribute("orders", orderService.findAll());
-        }
-
+        req.setAttribute("userId", userId);
+        req.setAttribute("orders", orderService.findAllByUserId(id));
         req.getRequestDispatcher(JspHelper.getPath(USER_ORDERS))
                 .forward(req, resp);
     }

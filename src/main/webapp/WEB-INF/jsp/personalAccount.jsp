@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html>
 <head>
     <title>Personal account</title>
@@ -11,25 +12,25 @@
 <c:choose>
     <c:when test="${not empty requestScope.userDetail}">
         <form action="${pageContext.request.contextPath}/personalAccount" method="post" enctype="multipart/form-data">
-            <label for="contact-number">Contact number</label>
+            <label for="contact-number"><fmt:message key="page.user.detail.telephone"/>:</label>
             <input type="tel" name="contact-number" id="contact-number" value="${requestScope.userDetail.contactNumber}">
-            <br>
-            <label for="photo">Photo:</label>
+            <br><br>
+            <label for="photo"><fmt:message key="page.user.detail.photo"/>:</label>
             <img src="${pageContext.request.contextPath}/images/${requestScope.userDetail.photo}" width="300px" alt="You does not have a image">
-            <br>
+            <br><br>
             <input type="file" name="photo" id="photo">
-            <br>
-            <label for="birthdate">Birthdate:</label>
+            <br><br>
+            <label for="birthdate"><fmt:message key="page.user.detail.birthdate"/></label>
             <input type="date" name="birthdate" id="birthdate" value="${requestScope.userDetail.birthdate}">
-            <br>
-            <label for="money">Money:</label>
+            <br><br>
+            <label for="money"><fmt:message key="page.user.detail.amount"/>Money:</label>
             <input type="number" name="money" id="money" value="${requestScope.userDetail.money}">
-            <br>
-            <button type="submit">Edit</button>
+            <br><br>
+            <button type="submit"><fmt:message key="page.personal.account.edit"/></button>
         </form>
     </c:when>
     <c:otherwise>
-        <p>You did not indicate the details!</p>
+        <p><fmt:message key="page.personal.account.message"/>You did not indicate the details!</p>
     </c:otherwise>
 </c:choose>
 

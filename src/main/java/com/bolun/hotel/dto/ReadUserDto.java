@@ -18,6 +18,15 @@ public class ReadUserDto {
     UserDetail userDetail;
     Role role;
     Gender gender;
+
+    public String toString() {
+        return "User id: " + id +
+                "\tfirst name: " + firstName +
+                "\tlast name: " + lastName +
+                "\temail: " + email +
+                "\trole: " + role +
+                "\tgender: " + gender;
+    }
 }
 
 

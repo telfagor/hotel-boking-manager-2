@@ -11,6 +11,8 @@ public interface UserDao extends BaseDao<Long, User> {
 
     List<User> findAll(UserFilter filter) throws IllegalAccessException;
 
+    List<User> findAll();
+
     Boolean isEmailAlreadySaved(String email);
 
     void saveUserDetail(Long id);

@@ -1,5 +1,6 @@
 package com.bolun.hotel.dao;
 
+import com.bolun.hotel.dto.ReadOrderDto;
 import com.bolun.hotel.entity.Order;
 import com.bolun.hotel.entity.enums.OrderStatus;
 
@@ -14,4 +15,6 @@ public interface OrderDao extends BaseDao<Long, Order> {
     List<Order> findAllByUserId(Long id);
 
     Boolean updateStatusByOrderId(Long id, OrderStatus status);
+
+//    List<ReadOrderDto> findAll()
 }

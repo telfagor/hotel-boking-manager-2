@@ -31,12 +31,10 @@ public class OrderServiceImpl implements OrderService {
 
     private static final OrderService INSTANCE = new OrderServiceImpl();
     private final OrderDao orderDao = OrderDaoImpl.getInstance();
-    private final UserDao userDao = UserDaoImpl.getInstance();
     private final ApartmentDao apartmentDao = ApartmentDaoImpl.getInstance();
     private final CreateOrderDtoMapper createMapper = CreateOrderDtoMapper.getInstance();
     private final ReadOrderDtoMapper readMapper = ReadOrderDtoMapper.getInstance();
     private final ReadUserDtoMapper userDtoMapper = ReadUserDtoMapper.getInstance();
-
     private final OrderValidatorImpl validator = OrderValidatorImpl.getInstance();
 
     @Override

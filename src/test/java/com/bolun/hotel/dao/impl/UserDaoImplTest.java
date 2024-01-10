@@ -2,6 +2,7 @@ package com.bolun.hotel.dao.impl;
 
 import com.bolun.hotel.dao.UserDao;
 import com.bolun.hotel.dao.UserDetailDao;
+import com.bolun.hotel.dto.UserFilter;
 import com.bolun.hotel.entity.User;
 import com.bolun.hotel.entity.UserDetail;
 import org.junit.jupiter.api.AfterEach;
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.time.Month;
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.Random;
 
 import static com.bolun.hotel.entity.enums.Gender.MALE;
 import static com.bolun.hotel.entity.enums.Role.ADMIN;
@@ -70,8 +72,8 @@ public class UserDaoImplTest {
         User user = createUser();
         User savedUser = userDao.save(user);
         Optional<User> actualUser = userDao.findById(user.getId());
-        users.add(savedUser);
         assertThat(actualUser).contains(savedUser);
+        users.add(savedUser);
     }
 
     @Test
@@ -88,13 +90,56 @@ public class UserDaoImplTest {
         User user = createUser();
         User savedUser = userDao.save(user);
         Optional<User> actualResult = userDao.findByEmailAndPassword(user.getEmail(), user.getPassword());
+        users.add(savedUser);
         assertThat(actualResult).contains(savedUser);
     }
 
     @Test
     @DisplayName("should return 2 users")
     void findAll() {
+        User firstUser = createUser();
+        User secondUser = createUser();
 
+        User firstSavedUser = userDao.save(firstUser);
+        User secondSavedUser = userDao.save(secondUser);
+
+        users.add(firstSavedUser);
+        users.add(secondSavedUser);
+        List<User> users = userDao.findAll();
+
+        assertThat(users).hasSize(2)
+                .containsExactlyInAnyOrder(firstSavedUser, secondSavedUser);
+    }
+
+    @Test
+    @DisplayName("find all with filter")
+    void findAllWithFilter() throws IllegalAccessException {
+        UserFilter userFilter = new UserFilter(null,
+                null, null, null, null, 2, 1);
+
+        User firstUser = createUser();
+        User secondUser = createUser();
+        User thirdUser = createUser();
+        User fourthUser = createUser();
+
+        User firstSavedUser = userDao.save(firstUser);
+        User secondSavedUser = userDao.save(secondUser);
+        User thirdSavedUser = userDao.save(thirdUser);
+        User fourthSavedUser = userDao.save(fourthUser);
+
+        List<User> firstUserList = userDao.findAll(userFilter);
+        assertThat(firstUserList).hasSize(2)
+                .containsExactlyInAnyOrder(firstSavedUser, secondSavedUser);
+
+        userFilter.setPageNumber(2);
+        List<User> secondUserList = userDao.findAll(userFilter);
+        assertThat(secondUserList).hasSize(2)
+                .containsExactlyInAnyOrder(thirdSavedUser, fourthSavedUser);
+
+        users.add(firstSavedUser);
+        users.add(secondSavedUser);
+        users.add(thirdSavedUser);
+        users.add(fourthSavedUser);
     }
 
     @Test
@@ -117,7 +162,7 @@ public class UserDaoImplTest {
         return User.builder()
                 .firstName("test")
                 .lastName("test")
-                .email("test3")
+                .email("test" + new Random().nextInt())
                 .password("test")
                 .role(ADMIN)
                 .gender(MALE)
@@ -126,7 +171,7 @@ public class UserDaoImplTest {
 
     private UserDetail createUserDetail() {
         return UserDetail.builder()
-                .contactNumber("+37367123345345")
+                .contactNumber(String.valueOf(new Random().nextInt()))
                 .birthdate(LocalDate.of(14, Month.APRIL, 3))
                 .money(1500)
                 .build();
