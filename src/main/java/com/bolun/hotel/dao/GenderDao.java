@@ -1,8 +1,7 @@
 package com.bolun.hotel.dao;
 
-import com.bolun.hotel.entity.enums.Gender;
-
 import java.util.List;
+import com.bolun.hotel.entity.enums.Gender;
 
 public interface GenderDao {
 

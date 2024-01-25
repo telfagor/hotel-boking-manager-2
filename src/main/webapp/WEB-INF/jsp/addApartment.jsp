@@ -36,6 +36,7 @@
     <br><br>
     <button type="submit"><fmt:message key="page.registration.submit.button"/></button>
 </form>
+
 <c:forEach var="error" items="${requestScope.errors}">
     <p class="error-message">${error.message}</p>
 </c:forEach>

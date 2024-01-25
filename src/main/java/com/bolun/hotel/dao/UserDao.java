@@ -13,7 +13,7 @@ public interface UserDao extends BaseDao<Long, User> {
 
     List<User> findAll();
 
-    Boolean isEmailAlreadySaved(String email);
+    boolean isEmailAlreadySaved(String email);
 
     void saveUserDetail(Long id);
 }

@@ -1,9 +1,9 @@
 package com.bolun.hotel.dto;
 
-import com.bolun.hotel.entity.enums.Gender;
-import com.bolun.hotel.entity.enums.OrderStatus;
 import lombok.Value;
 import lombok.Builder;
+import com.bolun.hotel.entity.enums.Gender;
+import com.bolun.hotel.entity.enums.OrderStatus;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

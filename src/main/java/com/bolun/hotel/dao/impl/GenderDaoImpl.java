@@ -1,7 +1,7 @@
 package com.bolun.hotel.dao.impl;
 
-import com.bolun.hotel.dao.GenderDao;
 import lombok.NoArgsConstructor;
+import com.bolun.hotel.dao.GenderDao;
 import com.bolun.hotel.entity.enums.Gender;
 import com.bolun.hotel.connection.ConnectionManager;
 import com.bolun.hotel.exception.DaoException;
@@ -20,6 +20,8 @@ public class GenderDaoImpl implements GenderDao {
 
     private static final GenderDaoImpl INSTANCE = new GenderDaoImpl();
     private static final String GENDER_TYPE = "gender_type";
+
+    //TODO: is it worth doing this?
     private static final String ERROR_MESSAGE = "The error occurred in the findAll method!";
 
 

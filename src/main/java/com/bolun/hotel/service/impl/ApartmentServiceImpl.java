@@ -8,7 +8,6 @@ import com.bolun.hotel.dto.CreateApartmentDto;
 import com.bolun.hotel.dto.ReadApartmentDto;
 import com.bolun.hotel.entity.Apartment;
 import com.bolun.hotel.entity.Order;
-import com.bolun.hotel.entity.enums.ApartmentStatus;
 import com.bolun.hotel.exception.ApartmentValidationException;
 import com.bolun.hotel.mapper.impl.CreateApartmentDtoMapper;
 import com.bolun.hotel.service.ApartmentService;
@@ -40,14 +39,14 @@ public class ApartmentServiceImpl implements ApartmentService {
     public CreateApartmentDto save(CreateApartmentDto createApartmentDto) throws IOException {
         ValidationResult validationResult = apartmentValidator.isValid(createApartmentDto);
 
-        if (!validationResult.isValid()) {
+        if (validationResult.hasErrors()) {
             throw new ApartmentValidationException(validationResult.getErrors());
         }
 
         Apartment apartment = createApartmentDtoMapper.mapFrom(createApartmentDto);
-
         apartmentDao.save(apartment);
         imageService.upload(apartment.getPhoto(), createApartmentDto.photo().getInputStream());
+
         return createApartmentDto;
     }
 

@@ -45,6 +45,7 @@ public class LoginServlet extends HttpServlet {
         resp.sendRedirect(APARTMENT);
     }
 
+    //TODO: is it worth to use @SneakyThrows?
     @SneakyThrows
     private void onLoginFail(HttpServletRequest req, HttpServletResponse resp) {
         resp.sendRedirect("/login?error&email=" + req.getParameter("email"));

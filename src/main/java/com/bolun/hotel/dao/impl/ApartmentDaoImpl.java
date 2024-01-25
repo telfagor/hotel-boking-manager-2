@@ -1,9 +1,9 @@
 package com.bolun.hotel.dao.impl;
 
-import com.bolun.hotel.helper.EntityBuilder;
 import lombok.NoArgsConstructor;
 import com.bolun.hotel.entity.Apartment;
 import com.bolun.hotel.dao.ApartmentDao;
+import com.bolun.hotel.helper.EntityBuilder;
 import com.bolun.hotel.exception.DaoException;
 import com.bolun.hotel.entity.enums.ApartmentStatus;
 import com.bolun.hotel.connection.ConnectionManager;
@@ -19,14 +19,9 @@ import static lombok.AccessLevel.PRIVATE;
 public class ApartmentDaoImpl implements ApartmentDao {
 
     private static final ApartmentDao INSTANCE = new ApartmentDaoImpl();
-
     private static final String ID = "id";
-    private static final String NUMBER_OF_ROOMS = "number_of_rooms";
-    private static final String NUMBER_OF_SEATS = "number_of_seats";
-    private static final String PRICE_PER_HOUR = "price_per_hour";
     private static final String PHOTO = "photo";
-    private static final String STATUS = "status";
-    private static final String TYPE = "apartment_type";
+
 
     private static final String INSERT_SQL = """
             INSERT INTO
@@ -94,7 +89,7 @@ public class ApartmentDaoImpl implements ApartmentDao {
     }
 
     @Override
-    public Boolean update(Apartment apartment) {
+    public boolean update(Apartment apartment) {
         try (Connection connection = ConnectionManager.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
             preparedStatement.setInt(1, apartment.getNumberOfRooms());
@@ -162,7 +157,7 @@ public class ApartmentDaoImpl implements ApartmentDao {
     }
 
     @Override
-    public Boolean delete(Long id) {
+    public boolean delete(Long id) {
         try (Connection connection = ConnectionManager.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_ID)) {
             preparedStatement.setLong(1, id);

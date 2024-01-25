@@ -1,20 +1,21 @@
 package com.bolun.hotel.dao.impl;
 
-import com.bolun.hotel.connection.ConnectionManager;
-import com.bolun.hotel.dao.OrderDao;
+import lombok.NoArgsConstructor;
 import com.bolun.hotel.entity.Order;
+import com.bolun.hotel.dao.OrderDao;
 import com.bolun.hotel.entity.enums.OrderStatus;
 import com.bolun.hotel.exception.DaoException;
 import com.bolun.hotel.helper.EntityBuilder;
-import lombok.NoArgsConstructor;
+import com.bolun.hotel.connection.ConnectionManager;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static lombok.AccessLevel.PRIVATE;
 
+//TODO: Add Logger
 @NoArgsConstructor(access = PRIVATE)
 public class OrderDaoImpl implements OrderDao {
 
@@ -64,9 +65,7 @@ public class OrderDaoImpl implements OrderDao {
                    us.photo AS user_photo,
                    us.birthdate,
                    us.money,
-                   g.id,
                    g.gender_type AS gender,
-                   r.id,
                    r.user_role,
                    a.id,
                    a.number_of_rooms,
@@ -123,7 +122,7 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public Boolean update(Order order) {
+    public boolean update(Order order) {
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
             preparedStatement.setTimestamp(1, Timestamp.valueOf(order.getCheckIn()));
@@ -210,7 +209,7 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public Boolean updateStatusByOrderId(Long id, OrderStatus status) {
+    public boolean updateStatusByOrderId(Long id, OrderStatus status) {
         try (Connection connection = ConnectionManager.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_ORDER_STATUS_BY_ID)) {
             preparedStatement.setInt(1, status.getValue());
@@ -222,7 +221,7 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public Boolean delete(Long id) {
+    public boolean delete(Long id) {
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_ID)) {
             preparedStatement.setLong(1, id);

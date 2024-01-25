@@ -6,9 +6,9 @@ public interface BaseDao<K, E> {
 
     E save(E entity);
 
-    Boolean update(E entity);
+    boolean update(E entity);
 
     Optional<E> findById(K id);
 
-    Boolean delete(K id);
+    boolean delete(K id);
 }

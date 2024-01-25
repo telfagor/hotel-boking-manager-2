@@ -5,7 +5,6 @@ import lombok.experimental.UtilityClass;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-
 @UtilityClass
 public class AgeCalculation {
 

@@ -2,20 +2,20 @@ package com.bolun.hotel.service.impl;
 
 import com.bolun.hotel.dao.ApartmentDao;
 import com.bolun.hotel.dao.OrderDao;
-import com.bolun.hotel.dao.UserDao;
 import com.bolun.hotel.dao.impl.ApartmentDaoImpl;
 import com.bolun.hotel.dao.impl.OrderDaoImpl;
-import com.bolun.hotel.dao.impl.UserDaoImpl;
 import com.bolun.hotel.dto.CreateOrderDto;
 import com.bolun.hotel.dto.ReadOrderDto;
 import com.bolun.hotel.entity.Order;
 import com.bolun.hotel.entity.User;
 import com.bolun.hotel.entity.enums.OrderStatus;
 import com.bolun.hotel.exception.InvalidDateException;
+import com.bolun.hotel.helper.PriceCalculation;
 import com.bolun.hotel.mapper.impl.CreateOrderDtoMapper;
 import com.bolun.hotel.mapper.impl.ReadOrderDtoMapper;
 import com.bolun.hotel.mapper.impl.ReadUserDtoMapper;
 import com.bolun.hotel.service.OrderService;
+import com.bolun.hotel.service.UserDetailService;
 import com.bolun.hotel.validator.OrderValidatorImpl;
 import com.bolun.hotel.validator.ValidationResult;
 import lombok.NoArgsConstructor;
@@ -26,6 +26,7 @@ import static com.bolun.hotel.entity.enums.ApartmentStatus.OCCUPIED;
 import static com.bolun.hotel.entity.enums.OrderStatus.PENDING;
 import static lombok.AccessLevel.PRIVATE;
 
+//TODO: To make the price calculation
 @NoArgsConstructor(access = PRIVATE)
 public class OrderServiceImpl implements OrderService {
 
@@ -36,12 +37,14 @@ public class OrderServiceImpl implements OrderService {
     private final ReadOrderDtoMapper readMapper = ReadOrderDtoMapper.getInstance();
     private final ReadUserDtoMapper userDtoMapper = ReadUserDtoMapper.getInstance();
     private final OrderValidatorImpl validator = OrderValidatorImpl.getInstance();
+    private final UserDetailService userDetailService = UserDetailServiceImpl.getInstance();
+
 
     @Override
     public CreateOrderDto create(CreateOrderDto createOrderDto) {
         ValidationResult validationResult = validator.isValid(createOrderDto);
 
-        if (!validationResult.isValid()) {
+        if (validationResult.hasErrors()) {
             throw new InvalidDateException(validationResult.getErrors());
         }
 
@@ -57,6 +60,12 @@ public class OrderServiceImpl implements OrderService {
 
         order.setUser(user);
         order.setStatus(PENDING);
+        userDetailService.findById(createOrderDto.readUserDto().getId())
+                .ifPresent(userDetail -> {
+                    int totalPrice = userDetail.getMoney() - PriceCalculation.getTotalPrice(createOrderDto);
+                    userDetail.setMoney(totalPrice);
+                    userDetailService.updateUserMoney(user.getId(), totalPrice);
+                });
 
         orderDao.save(order);
         return createOrderDto;

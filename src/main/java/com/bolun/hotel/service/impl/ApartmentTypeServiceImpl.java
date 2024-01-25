@@ -1,11 +1,10 @@
 package com.bolun.hotel.service.impl;
 
+import lombok.NoArgsConstructor;
 import com.bolun.hotel.dao.ApartmentTypeDao;
-import com.bolun.hotel.dao.impl.ApartmentTypeDaoImpl;
 import com.bolun.hotel.entity.enums.ApartmentType;
 import com.bolun.hotel.service.ApartmentTypeService;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import com.bolun.hotel.dao.impl.ApartmentTypeDaoImpl;
 
 import java.util.List;
 

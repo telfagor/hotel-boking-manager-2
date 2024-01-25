@@ -1,7 +1,7 @@
 package com.bolun.hotel.dao.impl;
 
-import com.bolun.hotel.dao.RoleDao;
 import lombok.NoArgsConstructor;
+import com.bolun.hotel.dao.RoleDao;
 import com.bolun.hotel.entity.enums.Role;
 import com.bolun.hotel.exception.DaoException;
 import com.bolun.hotel.connection.ConnectionManager;

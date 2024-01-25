@@ -1,15 +1,15 @@
 package com.bolun.hotel.dao.impl;
 
-import com.bolun.hotel.helper.EntityBuilder;
 import lombok.NoArgsConstructor;
 import com.bolun.hotel.dao.UserDetailDao;
 import com.bolun.hotel.entity.UserDetail;
+import com.bolun.hotel.helper.EntityBuilder;
 import com.bolun.hotel.exception.DaoException;
 import com.bolun.hotel.connection.ConnectionManager;
 
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static lombok.AccessLevel.PRIVATE;
@@ -24,8 +24,20 @@ public class UserDetailDaoImpl implements UserDetailDao {
             INSERT INTO user_detail (id, contact_number, photo, birthdate, money)
             VALUES (?, ?, ?, ?, ?)
             """;
+    private static final String UPDATE_SQL = """
+            UPDATE user_detail
+            SET contact_number = ?,
+                photo = ?,
+                birthdate = ?,
+                money = ?
+            WHERE id = ?;
+            """;
 
-
+    private static final String UPDATE_USER_MONEY = """
+            UPDATE user_detail
+            SET money = ?
+            WHERE id = ?
+            """;
 
     private static final String FIND_BY_ID_SQL = """
             SELECT id AS user_detail_id,
@@ -37,6 +49,7 @@ public class UserDetailDaoImpl implements UserDetailDao {
             WHERE id = ?
             """;
 
+
     private static final String FIND_USERS_IMAGES = """
             SELECT photo
             FROM user_detail
@@ -44,11 +57,11 @@ public class UserDetailDaoImpl implements UserDetailDao {
 
     private static final String FIND_USER_IMAGE_BY_ID = FIND_USERS_IMAGES + " WHERE id = ?";
 
-
     private static final String DELETE_BY_ID_SQL = """
             DELETE FROM user_detail
             WHERE id = ?
             """;
+
 
     @Override
     public UserDetail save(UserDetail userDetail) {
@@ -72,17 +85,8 @@ public class UserDetailDaoImpl implements UserDetailDao {
     }
 
 
-    private static final String UPDATE_SQL = """
-            UPDATE user_detail
-            SET contact_number = ?,
-                photo = ?,
-                birthdate = ?,
-                money = ?
-            WHERE id = ?;
-            """;
-
     @Override
-    public Boolean update(UserDetail userDetail) {
+    public boolean update(UserDetail userDetail) {
         String photo = userDetail.getPhoto().isEmpty()
                 ? findUserImageByUserId(userDetail.getId()).orElse(null)
                 : userDetail.getPhoto();
@@ -95,6 +99,18 @@ public class UserDetailDaoImpl implements UserDetailDao {
             preparedStatement.setInt(4, userDetail.getMoney());
             preparedStatement.setLong(5, userDetail.getId());
             return preparedStatement.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            throw new DaoException(ex.getMessage(), ex);
+        }
+    }
+
+    @Override
+    public void updateUserMoney(Long userId, int money) {
+        try (Connection connection = ConnectionManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_MONEY)) {
+            preparedStatement.setInt(1, money);
+            preparedStatement.setLong(2, userId);
+            preparedStatement.executeUpdate();
         } catch (SQLException ex) {
             throw new DaoException(ex.getMessage(), ex);
         }
@@ -121,7 +137,7 @@ public class UserDetailDaoImpl implements UserDetailDao {
     @Override
     public Optional<String> findUserImageByUserId(Long userId) {
         try (Connection connection = ConnectionManager.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(FIND_USER_IMAGE_BY_ID)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_USER_IMAGE_BY_ID)) {
             preparedStatement.setLong(1, userId);
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -137,7 +153,7 @@ public class UserDetailDaoImpl implements UserDetailDao {
     @Override
     public List<String> findAllUsersPhotos() {
         try (Connection connection = ConnectionManager.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(FIND_USERS_IMAGES)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_USERS_IMAGES)) {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             List<String> photos = new ArrayList<>();
@@ -152,9 +168,9 @@ public class UserDetailDaoImpl implements UserDetailDao {
     }
 
     @Override
-    public Boolean delete(Long id) {
+    public boolean delete(Long id) {
         try (Connection connection = ConnectionManager.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_ID_SQL)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_ID_SQL)) {
             preparedStatement.setLong(1, id);
             return preparedStatement.executeUpdate() > 0;
         } catch (SQLException ex) {

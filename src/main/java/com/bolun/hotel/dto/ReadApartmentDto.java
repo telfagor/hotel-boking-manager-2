@@ -1,9 +1,9 @@
 package com.bolun.hotel.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.Value;
+import lombok.Builder;
+import lombok.AllArgsConstructor;
 
 import java.math.BigDecimal;
 

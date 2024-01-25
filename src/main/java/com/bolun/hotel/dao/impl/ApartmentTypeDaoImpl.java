@@ -1,18 +1,17 @@
 package com.bolun.hotel.dao.impl;
 
-import com.bolun.hotel.connection.ConnectionManager;
+import lombok.NoArgsConstructor;
 import com.bolun.hotel.dao.ApartmentTypeDao;
 import com.bolun.hotel.entity.enums.ApartmentType;
+import com.bolun.hotel.connection.ConnectionManager;
 import com.bolun.hotel.exception.DaoException;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 import static lombok.AccessLevel.PRIVATE;
 

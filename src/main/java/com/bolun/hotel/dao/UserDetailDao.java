@@ -1,13 +1,15 @@
 package com.bolun.hotel.dao;
 
-import com.bolun.hotel.entity.UserDetail;
 
 import java.util.List;
 import java.util.Optional;
+import com.bolun.hotel.entity.UserDetail;
 
 public interface UserDetailDao extends BaseDao<Long, UserDetail> {
 
+   List<String> findAllUsersPhotos();
+
    Optional<String> findUserImageByUserId(Long id);
 
-   List<String> findAllUsersPhotos();
+   void updateUserMoney(Long userId, int money);
 }

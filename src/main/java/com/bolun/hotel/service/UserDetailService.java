@@ -14,6 +14,8 @@ public interface UserDetailService {
 
     Optional<UserDetail> findById(Long id);
 
+    void updateUserMoney(Long userId, int money);
+
     Optional<String> findUserImageByUserId(Long userId);
 
     List<String> findAllUsersImages();

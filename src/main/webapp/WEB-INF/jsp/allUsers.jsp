@@ -9,8 +9,15 @@
 <body>
 
 <%@ include file="header.jsp" %>
+<c:set var="localVar" value="pageSize=1&pageNumber=${(empty param.pageNumber) ? 1 : param.pageNumber + 1}" />
 
-<a href="${pageContext.request.contextPath}/allUsers?pageSize=1&pageNumber=${(empty param.pageNumber) ? 1 : param.pageNumber + 1}">
+<form action="${pageContext.request.contextPath}/allUsers?&pageSize=1&pageNumber=${(empty param.pageNumber) ? 1 : param.pageNumber + 1}" method="get" enctype="application/x-www-form-urlencoded">
+    <label for="search-input">Filter users by name:</label>
+    <input type="search" name="user-search" id="search-input" value="${requestScope.firstName}">
+    <input type="submit" value="Submit">
+</form>
+
+<a href="${pageContext.request.contextPath}/allUsers?${localVar}">
     <button type="button"><fmt:message key="page.button.next"/></button>
 </a>
 

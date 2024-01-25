@@ -2,7 +2,6 @@ package com.bolun.hotel.servlet;
 
 import com.bolun.hotel.dto.CreateUserDto;
 import com.bolun.hotel.entity.enums.Gender;
-import com.bolun.hotel.entity.enums.Role;
 import com.bolun.hotel.exception.UserNotValidException;
 import com.bolun.hotel.helper.JspHelper;
 import com.bolun.hotel.service.UserService;
@@ -13,8 +12,8 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import java.util.List;
 import java.io.IOException;
+import java.util.List;
 
 import static com.bolun.hotel.helper.UrlPath.LOGIN;
 import static com.bolun.hotel.helper.UrlPath.REGISTRATION;
@@ -26,7 +25,6 @@ public class RegistrationServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.setAttribute("roles", List.of(Role.values()));
         req.setAttribute("genders", List.of(Gender.values()));
         req.getRequestDispatcher(JspHelper.getPath(REGISTRATION))
                 .forward(req, resp);
@@ -34,15 +32,14 @@ public class RegistrationServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        CreateUserDto createUserDto = CreateUserDto
-                .builder()
-                .firstName(req.getParameter("first_name"))
-                .lastName(req.getParameter("last_name"))
-                .email(req.getParameter("email"))
-                .password(req.getParameter("password"))
-                .role(req.getParameter("role"))
-                .gender(req.getParameter("gender"))
-                .build();
+        CreateUserDto createUserDto = new CreateUserDto(
+                req.getParameter("first_name"),
+                req.getParameter("last_name"),
+                req.getParameter("email"),
+                req.getParameter("password"),
+                req.getParameter("role"),
+                req.getParameter("gender")
+        );
 
         try {
             userService.save(createUserDto);

@@ -8,6 +8,7 @@ import com.bolun.hotel.service.impl.UserServiceImpl;
 
 import static lombok.AccessLevel.PRIVATE;
 
+//TODO: Do I need to use numbers for error code?
 @NoArgsConstructor(access = PRIVATE)
 public class RegistrationValidatorImpl implements Validator<CreateUserDto> {
 
@@ -30,6 +31,7 @@ public class RegistrationValidatorImpl implements Validator<CreateUserDto> {
             validationResult.add(Error.of("invalid.email", "invalid email"));
         }
 
+        //TODO: This method throws NPE Why?
         /*if (Boolean.TRUE.equals(userService.isEmailAlreadyExist(createUserDto.email()))) {
             validationResult.add(Error.of("invalid.email", "email already exist!"));
         }*/

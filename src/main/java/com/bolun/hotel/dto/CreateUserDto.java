@@ -1,8 +1,5 @@
 package com.bolun.hotel.dto;
 
-import lombok.Builder;
-
-@Builder
 public record CreateUserDto(String firstName,
                             String lastName,
                             String email,

@@ -1,10 +1,9 @@
 package com.bolun.hotel.mapper.impl;
 
-import com.bolun.hotel.entity.enums.ApartmentStatus;
-import com.bolun.hotel.entity.enums.ApartmentType;
 import com.bolun.hotel.mapper.Mapper;
 import com.bolun.hotel.entity.Apartment;
 import com.bolun.hotel.dto.CreateApartmentDto;
+import com.bolun.hotel.entity.enums.ApartmentType;
 
 import java.math.BigDecimal;
 

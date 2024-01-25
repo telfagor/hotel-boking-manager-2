@@ -1,14 +1,12 @@
 package com.bolun.hotel.mapper.impl;
 
-import com.bolun.hotel.dto.CreateUserDto;
-import com.bolun.hotel.entity.User;
-import com.bolun.hotel.entity.enums.Gender;
-import com.bolun.hotel.entity.enums.Role;
-import com.bolun.hotel.mapper.Mapper;
-import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import com.bolun.hotel.entity.User;
+import com.bolun.hotel.mapper.Mapper;
+import com.bolun.hotel.dto.CreateUserDto;
+import com.bolun.hotel.entity.enums.Gender;
 
-import static lombok.AccessLevel.*;
+import static lombok.AccessLevel.PRIVATE;
 
 @NoArgsConstructor(access = PRIVATE)
 public class CreateUserDtoMapper implements Mapper<CreateUserDto, User> {

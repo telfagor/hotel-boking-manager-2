@@ -27,7 +27,6 @@ public class UserDetailServiceImpl implements UserDetailService {
     private static final UserDetailService INSTANCE = new UserDetailServiceImpl();
     private final UserDao userDao = UserDaoImpl.getInstance();
     private final UserDetailDao userDetailDao = UserDetailDaoImpl.getInstance();
-
     private final ImageService imageService = ImageService.getInstance();
     private final UserDetailDtoMapper userDetailDtoMapper = UserDetailDtoMapper.getInstance();
     private final UserDetailValidatorImpl userDetailValidatorImpl = UserDetailValidatorImpl.getInstance();
@@ -37,7 +36,7 @@ public class UserDetailServiceImpl implements UserDetailService {
     public UserDetailDto create(UserDetailDto userDetailDto) {
         ValidationResult validationResult = userDetailValidatorImpl.isValid(userDetailDto);
 
-        if (!validationResult.isValid()) { //TODO: hasErrors
+        if (validationResult.hasErrors()) {
             throw new UserDetailValidationException(validationResult.getErrors());
         }
 
@@ -57,7 +56,7 @@ public class UserDetailServiceImpl implements UserDetailService {
     public UserDetailDto update(UserDetailDto userDetailDto) {
         ValidationResult validationResult = new UpdateUserDetailValidator().isValid(userDetailDto);
 
-        if (!validationResult.isValid()) {
+        if (!validationResult.hasErrors()) {
             throw new UserDetailValidationException(validationResult.getErrors());
         }
 
@@ -70,10 +69,13 @@ public class UserDetailServiceImpl implements UserDetailService {
         return userDetailDto;
     }
 
+    @Override
+    public void updateUserMoney(Long userId, int money) {
+        userDetailDao.updateUserMoney(userId, money);
+    }
 
     @Override
     public Optional<UserDetail> findById(Long id) {
-
         return userDetailDao.findById(id);
     }
 

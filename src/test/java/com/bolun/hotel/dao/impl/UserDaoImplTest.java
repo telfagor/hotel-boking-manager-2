@@ -24,10 +24,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class UserDaoImplTest {
 
+    private final List<User> users = new ArrayList<>();
     private final UserDao userDao = UserDaoImpl.getInstance();
     private final UserDetailDao userDetailDao = UserDetailDaoImpl.getInstance();
-    private final List<User> users = new ArrayList<>();
-
 
     @Test
     @DisplayName("save user without user detail")
@@ -51,6 +50,7 @@ public class UserDaoImplTest {
         userDetailDao.save(userDetail);
         userDao.update(actualUser);
         users.add(user);
+
         assertNotNull(actualUser.getId());
         assertNotNull(actualUser.getUserDetail().getId());
     }
@@ -72,6 +72,7 @@ public class UserDaoImplTest {
         User user = createUser();
         User savedUser = userDao.save(user);
         Optional<User> actualUser = userDao.findById(user.getId());
+
         assertThat(actualUser).contains(savedUser);
         users.add(savedUser);
     }

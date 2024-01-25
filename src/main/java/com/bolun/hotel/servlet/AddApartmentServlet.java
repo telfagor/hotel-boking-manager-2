@@ -3,7 +3,6 @@ package com.bolun.hotel.servlet;
 import com.bolun.hotel.dto.CreateApartmentDto;
 import com.bolun.hotel.exception.ApartmentValidationException;
 import com.bolun.hotel.helper.JspHelper;
-import com.bolun.hotel.helper.UrlPath;
 import com.bolun.hotel.service.ApartmentService;
 import com.bolun.hotel.service.ApartmentStatusService;
 import com.bolun.hotel.service.ApartmentTypeService;
@@ -20,7 +19,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static com.bolun.hotel.helper.UrlPath.ADD_APARTMENT;
-import static com.bolun.hotel.helper.UrlPath.APARTMENT;
+import static com.bolun.hotel.helper.UrlPath.ORDER;
 
 @MultipartConfig(fileSizeThreshold = 1024 * 1024)
 @WebServlet(ADD_APARTMENT)
@@ -52,7 +51,7 @@ public class AddApartmentServlet extends HttpServlet {
 
         try {
             apartmentService.save(createApartmentDto);
-            resp.sendRedirect(APARTMENT);
+            resp.sendRedirect(ORDER);
         } catch (ApartmentValidationException ex) {
             req.setAttribute("errors", ex.getErrors());
             doGet(req, resp);

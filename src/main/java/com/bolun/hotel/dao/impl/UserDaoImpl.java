@@ -1,23 +1,22 @@
 package com.bolun.hotel.dao.impl;
 
-import com.bolun.hotel.helper.EntityBuilder;
 import lombok.SneakyThrows;
 import lombok.NoArgsConstructor;
 import com.bolun.hotel.entity.User;
-import com.bolun.hotel.dto.UserFilter;
 import com.bolun.hotel.dao.UserDao;
+import com.bolun.hotel.dto.UserFilter;
 import com.bolun.hotel.entity.enums.Role;
+import com.bolun.hotel.helper.EntityBuilder;
 import com.bolun.hotel.exception.DaoException;
 import com.bolun.hotel.connection.ConnectionManager;
 
-import java.lang.reflect.Field;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 
-import static lombok.AccessLevel.PRIVATE;
 import static java.util.stream.Collectors.joining;
+import static lombok.AccessLevel.PRIVATE;
 
 @NoArgsConstructor(access = PRIVATE)
 public class UserDaoImpl implements UserDao {
@@ -119,7 +118,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public Boolean update(User user) {
+    public boolean update(User user) {
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_SQL)) {
             preparedStatement.setString(1, user.getFirstName());
@@ -158,7 +157,7 @@ public class UserDaoImpl implements UserDao {
     }
 
 
-    public Boolean isEmailAlreadySaved(String email) {
+    public boolean isEmailAlreadySaved(String email) {
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(IS_EMAIL_EXIST)) {
             preparedStatement.setString(1, email);
@@ -189,7 +188,7 @@ public class UserDaoImpl implements UserDao {
     }
 
 
-    /*@Override
+    @Override
     public List<User> findAll(UserFilter filter) throws IllegalAccessException {
         List<User> users = new ArrayList<>();
         List<Object> parameters = new ArrayList<>();
@@ -233,7 +232,7 @@ public class UserDaoImpl implements UserDao {
                 ? whereSQL.stream().collect(joining(" AND ", " WHERE ", " ORDER BY u.id LIMIT ? OFFSET ?"))
                 : " ORDER BY u.id LIMIT ? OFFSET ?";
 
-        String sql = FIND_ALL_SQL + (isFilterEmpty ? where : "") + " ";
+        String sql = FIND_ALL_SQL + where;
 
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -250,9 +249,9 @@ public class UserDaoImpl implements UserDao {
         } catch (SQLException ex) {
             throw new DaoException(ex.getMessage(), ex);
         }
-    }*/
+    }
 
-    @Override
+    /*@Override
     public List<User> findAll(UserFilter filter) {
         List<User> users = new ArrayList<>();
         List<Object> parameters = new ArrayList<>();
@@ -263,8 +262,8 @@ public class UserDaoImpl implements UserDao {
             Class<UserFilter> clazz = UserFilter.class;
             for (Field field : clazz.getDeclaredFields()) {
                 field.setAccessible(true);
-                if (field.get(filter) != null && !isColumnNameProperly(field.getName())) {
-                    parameters.add('%' + field.getName() + '%');
+                if (field.get(filter) != null && isColumnNameProperly(field.getName())) {
+                    parameters.add('%' + String.valueOf(field.get(filter)) + '%');
                     whereSQL.add(getColumnName(field.getName()) + " LIKE ?");
                     isFilterNotEmpty = true;
                 }
@@ -280,7 +279,7 @@ public class UserDaoImpl implements UserDao {
                 ? whereSQL.stream().collect(joining(" AND ", " WHERE ", " ORDER BY u.id LIMIT ? OFFSET ?"))
                 : " ORDER BY u.id LIMIT ? OFFSET ?";
 
-        String sql = FIND_ALL_SQL + (!isFilterNotEmpty ? where : "");
+        String sql = FIND_ALL_SQL + where;
 
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -296,7 +295,7 @@ public class UserDaoImpl implements UserDao {
             throw new DaoException(ex.getMessage(), ex);
         }
         return users;
-    }
+    }*/
 
     private String getColumnName(String name) {
         StringBuilder stringBuilder = new StringBuilder();
@@ -314,7 +313,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     private boolean isColumnNameProperly(String name) {
-        return name.equals("pageSize") || name.equals("pageNumber");
+        return !(name.equals("pageSize") || name.equals("pageNumber"));
     }
 
     @Override
@@ -336,7 +335,7 @@ public class UserDaoImpl implements UserDao {
 
     @SneakyThrows
     @Override
-    public Boolean delete(Long id) {
+    public boolean delete(Long id) {
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(DELETE_BY_ID)) {
             preparedStatement.setLong(1, id);

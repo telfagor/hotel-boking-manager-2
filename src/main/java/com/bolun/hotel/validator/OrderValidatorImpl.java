@@ -27,7 +27,6 @@ public class OrderValidatorImpl implements Validator<CreateOrderDto> {
             isDateTimeEmpty = true;
         }
 
-
         if (isDateTimeEmpty) {
             return validationResult;
         }

@@ -15,7 +15,6 @@
 <body>
 
 <%@include file="header.jsp" %>
-<%--<%@ include file="personalAccountButton.jsp" %>--%>
 <h2><fmt:message key="page.user.detail.title"/></h2>
 
 <c:if test="${sessionScope.user.role eq 'ADMIN'}">
@@ -37,6 +36,7 @@
     <br><br>
     <button type="submit"><fmt:message key="page.user.add.details"/></button>
 </form>
+
 <c:if test="${not empty requestScope.errors}">
     <c:forEach var="item" items="${requestScope.errors}">
         <div class="error">

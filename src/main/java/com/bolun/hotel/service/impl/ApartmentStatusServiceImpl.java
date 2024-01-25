@@ -1,9 +1,9 @@
 package com.bolun.hotel.service.impl;
 
 import com.bolun.hotel.dao.ApartmentStatusDao;
-import com.bolun.hotel.dao.impl.ApartmentStatusDaoImpl;
 import com.bolun.hotel.entity.enums.ApartmentStatus;
 import com.bolun.hotel.service.ApartmentStatusService;
+import com.bolun.hotel.dao.impl.ApartmentStatusDaoImpl;
 
 import java.util.List;
 

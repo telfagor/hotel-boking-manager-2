@@ -1,9 +1,9 @@
 package com.bolun.hotel.service.impl;
 
-import com.bolun.hotel.dto.UserFilter;
 import lombok.NoArgsConstructor;
 import com.bolun.hotel.entity.User;
 import com.bolun.hotel.dao.UserDao;
+import com.bolun.hotel.dto.UserFilter;
 import com.bolun.hotel.dto.ReadUserDto;
 import com.bolun.hotel.dto.CreateUserDto;
 import com.bolun.hotel.dao.impl.UserDaoImpl;
@@ -19,6 +19,7 @@ import java.util.Optional;
 
 import static lombok.AccessLevel.PRIVATE;
 
+//TODO: Maybe return DTO
 @NoArgsConstructor(access = PRIVATE)
 public class UserServiceImpl implements UserService {
 
@@ -29,14 +30,15 @@ public class UserServiceImpl implements UserService {
     private final RegistrationValidatorImpl validator = RegistrationValidatorImpl.getInstance();
 
     @Override
-    public Long save(CreateUserDto createUserDto) {
+    public ReadUserDto save(CreateUserDto createUserDto) {
         ValidationResult validationResult = validator.isValid(createUserDto);
 
-        if (!validationResult.isValid()) {
+        if (validationResult.hasErrors()) {
             throw new UserNotValidException(validationResult.getErrors());
         }
         User user = createUserDtoMapper.mapFrom(createUserDto);
-        return userDao.save(user).getId();
+        User savedUser = userDao.save(user);
+        return readUserDtoMapper.mapFrom(savedUser);
     }
 
     @Override
@@ -51,10 +53,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean isEmailAlreadyExist(String email) {
+    public boolean isEmailAlreadyExist(String email) {
         return userDao.isEmailAlreadySaved(email);
     }
 
+    //TODO: Do I need this method? The user cannot update this information
     @Override
     public Boolean update(CreateUserDto createUserDto) {
         User user = createUserDtoMapper.mapFrom(createUserDto);

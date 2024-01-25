@@ -10,7 +10,7 @@ import java.time.LocalDate;
 public class UserDetailValidatorImpl implements Validator<UserDetailDto> {
 
     private static final UserDetailValidatorImpl INSTANCE = new UserDetailValidatorImpl();
-    private static final LocalDate MIN_DATE = LocalDate.of(1950, Month.JANUARY, 1);
+    private static final LocalDate MIN_BIRTH_DATE = LocalDate.of(1950, Month.JANUARY, 1);
 
     @Override
     public ValidationResult isValid(UserDetailDto object) {
@@ -24,8 +24,8 @@ public class UserDetailValidatorImpl implements Validator<UserDetailDto> {
             validationResult.add(Error.of("invalid.birthdate", "invalid birthdate"));
         }
 
-        if (LocalDateFormatter.format(object.birthdate()).isBefore(MIN_DATE)) {
-            validationResult.add(Error.of("invalid.birthdate", "The date should be after " + MIN_DATE));
+        if (LocalDateFormatter.format(object.birthdate()).isBefore(MIN_BIRTH_DATE)) {
+            validationResult.add(Error.of("invalid.birthdate", "The date should be after " + MIN_BIRTH_DATE));
         }
 
         if (!AgeCalculation.isAdult(object.birthdate())) {

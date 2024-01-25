@@ -3,7 +3,6 @@ package com.bolun.hotel.servlet;
 import com.bolun.hotel.dto.ReadUserDto;
 import com.bolun.hotel.dto.UserDetailDto;
 import com.bolun.hotel.entity.UserDetail;
-import com.bolun.hotel.exception.UserDetailValidationException;
 import com.bolun.hotel.helper.JspHelper;
 import com.bolun.hotel.service.UserDetailService;
 import com.bolun.hotel.service.impl.UserDetailServiceImpl;
@@ -14,9 +13,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
+import com.bolun.hotel.exception.UserDetailValidationException;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Optional;
 
 import static com.bolun.hotel.helper.UrlPath.APARTMENT;

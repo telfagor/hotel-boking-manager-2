@@ -1,10 +1,10 @@
 package com.bolun.hotel.mapper.impl;
 
-import com.bolun.hotel.dto.UserDetailDto;
-import com.bolun.hotel.entity.UserDetail;
-import com.bolun.hotel.helper.LocalDateFormatter;
-import com.bolun.hotel.mapper.Mapper;
 import lombok.NoArgsConstructor;
+import com.bolun.hotel.mapper.Mapper;
+import com.bolun.hotel.entity.UserDetail;
+import com.bolun.hotel.dto.UserDetailDto;
+import com.bolun.hotel.helper.LocalDateFormatter;
 
 import static lombok.AccessLevel.PRIVATE;
 
